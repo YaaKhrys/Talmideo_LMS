@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log In - Talmidēo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/login.css" />
+
+   <!--Link to Google Fonts: Inter, Fondamento, Cormorant Garamond-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https:fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Fondamento:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+        <!--Favicon-->
+        <link rel="icon" type="image/png" sizes="90x90" href="assets/images/favicon.png" />
+        
+        
+        <!--Google Analytics Tag-->
+        <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KGV5ZELN62"></script>
+<script src="assets/js/analytics.js"></script>
+
+
+</head>
+<body class="login-page">
+
+  <!-- ====== Login Page Container ====== -->
+  <div class="login-container">
+
+    <!-- ====== Left Side: Image Section ====== -->
+    <div class="login-image-side"></div>
+
+    <!-- ====== Right Side: Login Form Section ====== -->
+    <div class="login-form-side">
+
+      <!-- ====== Form Content Wrapper ====== -->
+      <div class="form-content">
+
+         <!-- Logo -->
+        <div class="form-logo">
+          <img src="assets/images/Talmidēo Logo.png" alt="Talmidēo logo" />
+          <span class="logo-text">Talmidēo</span>
+        </div>
+
+        <!-- ====== Heading ====== -->
+        <h2>Log In</h2>
+
+        <!-- ====== Subtitle ====== -->
+        <p class="form-subtitle">Welcome back! Please login to your account.</p>
+
+        <!-- ====== Login Form ====== -->
+        <form action="/login.php" method="POST">
+
+          <!-- Email Field -->
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required />
+          </div>
+
+          <!-- Password Field with Toggle Icon -->
+          <div class="form-group password-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required />
+            <!-- Closed eye by default -->
+    <img
+      src="assets/images/eye-password-hidden.png"
+      alt="Toggle password"
+      class="toggle-eye"
+      onclick="togglePassword('password', this)"
+    />
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="signup-btn">Sign In</button>
+
+        </form>
+
+        <!-- ====== Redirect to Register ====== -->
+        <p class="redirect-text">
+          Don't have an account? <a href="register.html">Sign up</a>
+        </p>
+
+      </div>
+    </div>
+  </div>
+
+   <!-- JavaScript -->
+    <script src="assets/js/main.js"></script>
+
+  </script>
+
+</body>
+</html>

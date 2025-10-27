@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - Talmidēo</title>
+
+    <!--Link to Google Fonts: Inter, Fondamento, Cormorant Garamond-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https:fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Fondamento:ital@0;1&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+        <!--Favicon-->
+        <link rel="icon" type="image/png" sizes="90x90" href="assets/images/favicon.png" />
+        
+        <!--Google Analytics Tag-->
+        <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KGV5ZELN62"></script>
+<script src="assets/js/analytics.js"></script>
+
+    <link rel="stylesheet" href="assets/css/register.css" />
+    <link rel="icon" href="assets/images/Talmidēo Logo.png" />
+  </head>
+
+  <body class="register-page">
+    <div class="register-container">
+      <!-- Left Side Image -->
+      <div class="register-image-side"></div>
+
+      <!-- Right Side Form -->
+      <div class="register-form-side">
+        <div class="form-content">
+          <!-- Logo -->
+          <div class="form-logo">
+            <img src="assets/images/Talmidēo Logo.png" alt="Talmidēo logo" />
+            <span class="logo-text">Talmidēo</span>
+          </div>
+
+          <!-- Headings -->
+          <h2>Create your account</h2>
+          <p class="form-subtitle">
+            Welcome to Talmidēo. Please complete the form below.
+          </p>
+
+          <!-- FORM STARTS -->
+          <form
+            action="register.php"
+            method="POST"
+            class="register-form"
+            id="registerForm"
+          >
+            <!-- Name Fields -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstname">First Name</label>
+                <input
+                  type="text"
+                  id="firstname"
+                  name="firstname"
+                  placeholder="Your first name"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="lastname">Last Name</label>
+                <input
+                  type="text"
+                  id="lastname"
+                  name="lastname"
+                  placeholder="Your last name"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Gender & Date of Birth -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender" required>
+                  <option value="">Select gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="dob">Date of Birth</label>
+                <input type="date" id="dob" name="dob" required />
+              </div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+
+            <!-- Passwords -->
+            <div class="form-row">
+              <div class="form-group password-group">
+                <label for="password">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Enter password"
+                  required
+                />
+                <img
+                  src="assets/images/eye-password-hidden.png"
+                  alt="Toggle password"
+                  class="toggle-eye"
+                  onclick="togglePassword('password', this)"
+                />
+              </div>
+              <div class="form-group password-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input
+                  type="password"
+                  id="confirm-password"
+                  placeholder="Confirm password"
+                  required
+                />
+                <img
+                  src="assets/images/eye-password-hidden.png"
+                  alt="Toggle confirm password"
+                  class="toggle-eye"
+                  onclick="togglePassword('confirm-password', this)"
+                />
+              </div>
+            </div>
+
+            <!-- Sign Up Button -->
+            <button type="submit" class="signup-btn">Sign Up</button>
+
+            <!-- Redirect -->
+            <p class="redirect-text">
+              Already have an account? <a href="login.html">Log in</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="assets/js/main.js"></script>
+  </body>
+</html>

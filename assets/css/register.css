@@ -1,0 +1,259 @@
+/* =======================
+   Reset & Base Styles
+========================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body,
+html {
+  font-family: "Inter", sans-serif;
+  height: 100vh;
+  overflow: hidden; /* Prevent page scroll */
+}
+
+/* =======================
+   Layout Container
+========================== */
+
+.register-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+/* ================================
+   Global Input Font Styling
+=================================== */
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  font-size: 1rem;
+  color: #1d1d1d;
+  font-family: "Inter", sans-serif;
+}
+
+/* =======================
+   Left: Image Section
+========================== */
+
+.register-image-side {
+  flex: 1.3; /* Takes up 65% of screen */
+  background-image: url("../images/Landing\ Page\ Chuch\ Image.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #fafcf5ff; /* fallback background */
+}
+
+/* =======================
+   Right: Form Section
+========================== */
+
+.register-form-side {
+  flex: 0.7; /* Takes up 35% of screen */
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.form-content {
+  width: 100%;
+  max-width: 600px;
+}
+
+/* =======================
+   Logo
+========================== */
+
+.form-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.form-logo img {
+  width: 65px;
+  height: auto;
+  margin-right: 0.5rem;
+}
+
+.form-logo span {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.logo-text {
+  font-family: "Fondamento", cursive;
+  font-size: 2rem;
+  color: #010404;
+  line-height: 1;
+  margin-left: -18px;
+  padding: 0;
+}
+
+/* =======================
+   Titles
+========================== */
+
+h2 {
+  text-align: left;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.form-subtitle {
+  text-align: left;
+  font-weight: 300;
+  font-size: 0.75rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+/* =======================
+   Form Layout
+========================== */
+
+/* Row wrapper (first name + last name) */
+.form-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap; /* Mobile friendly stacking */
+}
+
+/* Individual form group (label + input) */
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.8rem;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 400;
+  margin-bottom: 0.3rem;
+}
+
+/* Dropdown and Date styles */
+.form-group select,
+.form-group input[type="date"] {
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #b6c1a3;
+  font-size: 0.9rem;
+  outline: none;
+  background-color: #fff;
+  color: #333;
+}
+
+/* Input box style */
+.form-group input {
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #b6c1a3;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+/* =======================
+   Password Fields
+========================== */
+
+/* Positioning for eye icon */
+.password-group {
+  position: relative;
+  margin-top: 0.8rem;
+}
+
+.password-group input {
+  width: 100%;
+  padding-right: 2.5rem; /* room for eye icon */
+}
+
+/* Eye icon itself */
+.toggle-eye {
+  position: absolute;
+  right: 0.3rem;
+  top: 70%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.toggle-eye.eye-closed {
+  width: 25px;
+  height: 25px;
+}
+
+.toggle-eye.eye-open {
+  width: 15px;
+  height: 15px;
+}
+
+.toggle-eye:hover {
+  opacity: 1;
+}
+
+/* =======================
+   Submit Button
+========================== */
+
+.signup-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #b6c1a3;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 999px; /* fully rounded */
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.3s ease;
+}
+
+.signup-btn:hover {
+  background-color: rgba(204, 218, 165, 0.864);
+}
+
+/* =======================
+   Redirect Text (below button)
+========================== */
+
+.redirect-text {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.redirect-text a {
+  color: #82020b;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* ============================= */
+/* Responsive Form Adjustments  */
+/* ============================= */
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  .form-row .form-group {
+    width: 100%;
+  }
+}
