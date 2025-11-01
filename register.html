@@ -13,13 +13,21 @@
       rel="stylesheet"
     />
 
-        <!--Favicon-->
-        <link rel="icon" type="image/png" sizes="90x90" href="assets/images/favicon.png" />
-        
-        <!--Google Analytics Tag-->
-        <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KGV5ZELN62"></script>
-<script src="assets/js/analytics.js"></script>
+    <!--Favicon-->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="90x90"
+      href="assets/images/favicon.png"
+    />
+
+    <!--Google Analytics Tag-->
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-KGV5ZELN62"
+    ></script>
+    <script src="assets/js/analytics.js"></script>
 
     <link rel="stylesheet" href="assets/css/register.css" />
     <link rel="icon" href="assets/images/Talmidēo Logo.png" />
@@ -109,34 +117,42 @@
             <div class="form-row">
               <div class="form-group password-group">
                 <label for="password">Password</label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="Enter password"
-                  required
-                />
-                <img
-                  src="assets/images/eye-password-hidden.png"
-                  alt="Toggle password"
-                  class="toggle-eye"
-                  onclick="togglePassword('password', this)"
-                />
+                <div class="password-wrapper">
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter password"
+                    required
+                  />
+                  <img
+                    src="assets/images/eye-password-hidden.png"
+                    alt="Show password"
+                    class="toggle-password"
+                    data-target="password"
+                  />
+                </div>
+                <!-- Strength bar + feedback dynamically inserted here -->
               </div>
+
               <div class="form-group password-group">
                 <label for="confirm-password">Confirm Password</label>
-                <input
-                  type="password"
-                  id="confirm-password"
-                  placeholder="Confirm password"
-                  required
-                />
-                <img
-                  src="assets/images/eye-password-hidden.png"
-                  alt="Toggle confirm password"
-                  class="toggle-eye"
-                  onclick="togglePassword('confirm-password', this)"
-                />
+                <div class="password-wrapper">
+                  <input
+                    type="password"
+                    id="confirm-password"
+                    name="confirm_password"
+                    placeholder="Confirm password"
+                    required
+                  />
+                  <img
+                    src="assets/images/eye-password-hidden.png"
+                    alt="Show password"
+                    class="toggle-password"
+                    data-target="confirm-password"
+                  />
+                </div>
+                <!-- Match message appears here dynamically -->
               </div>
             </div>
 
