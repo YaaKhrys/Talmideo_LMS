@@ -416,6 +416,85 @@ h2 {
   font-weight: 500;
 }
 
+/* =======================
+   Universal Page Alerts
+========================== */
+.page-alert-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 9999;
+  pointer-events: none; /* alerts don’t block clicks below */
+}
+
+.page-alert {
+  position: relative;
+  min-width: 280px;
+  max-width: 90%;
+  background: rgba(182, 193, 163, 0.85);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  padding: 1rem 2.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: auto;
+  transition: all 0.6s ease;
+}
+
+.page-alert.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-alert.fade-out {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+/* Close button */
+.alert-close {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  line-height: 1;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+}
+
+.alert-close:hover {
+  opacity: 1;
+}
+
+/* Color Variants */
+.page-alert.success {
+  background: rgba(106, 168, 79, 0.85);
+}
+
+.page-alert.error {
+  background: rgba(178, 34, 34, 0.85);
+}
+
+.page-alert.info {
+  background: rgba(182, 193, 163, 0.85);
+}
+
 /* ============================= */
 /* Responsive Form Adjustments  */
 /* ============================= */

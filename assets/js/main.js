@@ -227,8 +227,21 @@ if (document.body.classList.contains("register-page")) {
     registerForm.addEventListener("submit", (e) => {
       if (password.value !== confirmPassword.value) {
         e.preventDefault();
-        alert("Passwords do not match.");
+        showAlert("❌ Passwords do not match.", "error");
+        return;
       }
+
+      if (!registerForm.checkValidity()) {
+        e.preventDefault();
+        showAlert("⚠️ Please fill in all required fields.", "info");
+        return;
+      }
+
+      // If you connect to backend later (PHP), you can handle:
+      // success or error from backend response here
+      // Example (temporary demo):
+      e.preventDefault();
+      showAlert("🎉 Registration successful! Welcome aboard.", "success");
     });
   }
 }
@@ -259,7 +272,19 @@ if (document.body.classList.contains("login-page")) {
       const password = loginForm.querySelector('input[name="password"]');
       if (!username.value.trim() || !password.value.trim()) {
         e.preventDefault();
-        alert("Please enter both username and password.");
+        showAlert("⚠️ Please enter both username and password.", "info");
+        return;
+      }
+
+      // Temporary example: mock validation
+      if (username.value === "test" && password.value === "12345") {
+        e.preventDefault();
+        showAlert("✅ Login successful!", "success");
+        // redirect example
+        setTimeout(() => (window.location.href = "dashboard.html"), 2000);
+      } else {
+        e.preventDefault();
+        showAlert("❌ Invalid username or password.", "error");
       }
     });
   }
@@ -320,3 +345,116 @@ if (themeToggleBtn) {
     }
   });
 }
+
+/* ================================
+   8. Universal Alert System
+=================================== */
+
+let alertContainer = document.querySelector(".page-alert-container");
+
+function showAlert(message, type = "info", duration = 4000) {
+  const alert = document.createElement("div");
+  alert.className = `page-alert ${type}`;
+  alert.innerHTML = `
+    ${message}
+    <button class="alert-close">&times;</button>
+  `;
+
+  alertContainer.appendChild(alert);
+
+  setTimeout(() => alert.classList.add("show"), 50);
+
+  alert.querySelector(".alert-close").addEventListener("click", () => {
+    dismissAlert(alert);
+  });
+
+  setTimeout(() => dismissAlert(alert), duration);
+}
+
+function dismissAlert(alert) {
+  alert.classList.remove("show");
+  alert.classList.add("fade-out");
+  setTimeout(() => {
+    if (alert && alert.parentNode) alert.parentNode.removeChild(alert);
+  }, 600);
+}
+
+/* ================================
+   9. UNIVERSAL PAGE ALERTS (PHP redirects)
+   ----------------------------------------
+   This handles alerts triggered by PHP redirects.
+   Each PHP file (login.php, register.php, logout.php, etc.)
+   redirects with a small URL parameter like ?registered=1
+   so the JS can display a friendly message on the HTML page.
+=================================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+  const params = new URLSearchParams(window.location.search);
+
+  /* ===== LOGOUT PAGE ALERTS ===== */
+  // Triggered from: logout.php → login.html?logout=1
+  if (params.has("logout")) {
+    showAlert("👋 You have been logged out successfully.", "info");
+  }
+
+  /* ===== REGISTER PAGE ALERTS ===== */
+  // Triggered from: register.php → login.html?registered=1, etc.
+
+  // Registration successful
+  if (params.has("registered")) {
+    showAlert("🎉 Registration successful! You can now log in.", "success");
+  }
+
+  // Email already exists
+  if (params.has("exists")) {
+    showAlert(
+      "⚠️ This email is already registered. Please log in instead.",
+      "error"
+    );
+  }
+
+  // Missing required fields
+  if (params.has("missing")) {
+    showAlert("⚠️ Please complete all required fields.", "info");
+  }
+
+  // Generic registration or database error
+  if (params.has("error")) {
+    showAlert("❌ Something went wrong. Please try again.", "error");
+  }
+
+  /* ===== LOGIN PAGE ALERTS ===== */
+  // When email not found
+  if (params.has("notfound")) {
+    showAlert(
+      "📭 No account found with that email. Please register first.",
+      "error"
+    );
+  }
+
+  // When password is incorrect
+  if (params.has("invalid")) {
+    showAlert("❌ Invalid password. Please try again.", "error");
+  }
+
+  // When login fields are missing
+  if (params.has("missing")) {
+    showAlert("⚠️ Please enter both email and password.", "info");
+  }
+});
+
+// ===== DASHBOARD SESSION ALERTS =====
+if (params.has("sessionexpired")) {
+  showAlert("⚠️ Your session expired. Please log in again.", "info");
+}
+
+/* ================================
+   10. Google analytics track Tag
+=================================== */
+window.dataLayer = window.dataLayer || [];
+function gtag() {
+  dataLayer.push(arguments);
+}
+gtag("js", new Date());
+
+gtag("config", "G-KGV5ZELN62");

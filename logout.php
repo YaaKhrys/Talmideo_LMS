@@ -2,7 +2,8 @@
 session_start();
 session_unset();
 session_destroy();
-header("Location: login.html");
+// Redirect back to login page with alert flag
+header("Location: login.html?logout=1");
 
 exit;
 

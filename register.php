@@ -19,10 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Basic validation
     if (empty($firstname) || empty($email) || empty($password) || empty($dob)) {
-        echo "<script>
-                alert('Please complete all fields.');
-                window.history.back();
-              </script>";
+       header("Location: register.html?missing=1");
         exit;
     }
 
@@ -33,10 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $check_email->store_result();
 
     if ($check_email->num_rows > 0) {
-        echo "<script>
-                alert('This email is already registered. Please log in instead.');
-                window.history.back();
-              </script>";
+        header("Location: register.html?exists=1");
         exit;
     }
 
@@ -50,12 +44,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql->bind_param("ssssss", $firstname, $lastname, $email, $hashed_password, $gender, $dob);
 
     if ($sql->execute()) {
-        echo "<script>
-                alert('Registration successful! Please log in.');
-                window.location='login.html';
-              </script>";
+       header("Location: login.html?registered=1");
     } else {
-        echo "Error: " . $sql->error;
+        header("Location: register.html?error=1");
     }
 
     $sql->close();
