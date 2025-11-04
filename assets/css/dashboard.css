@@ -284,12 +284,13 @@ input:checked + .slider::before {
 /* Left and Right columns stretch full height */
 .main-boxes,
 .info-boxes {
-.main-boxes,
-.info-boxes {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  height: 100%;
+  .main-boxes,
+  .info-boxes {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+  }
 }
 
 /* Left section */
