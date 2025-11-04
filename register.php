@@ -8,8 +8,15 @@
 // Check Connection
 require_once 'config/db_config.php';
 
+// Tell the browser we're sending JSON, not HTML
+header('Content-Type: application/json');
+
+// Default response (in case something unexpected happens)
+$response = ['success' => false, 'message' => 'Registration unsuccessful.'];
+
+
 // Collect & clean the form
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $firstname = trim($_POST['firstname']);
     $lastname = trim($_POST['lastname']);
     $email = trim($_POST['email']);
@@ -19,48 +26,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Basic validation
     if (empty($firstname) || empty($email) || empty($password) || empty($dob)) {
-        echo "<script>
-                alert('Please complete all fields.');
-                window.history.back();
-              </script>";
+        $response['message'] = 'Please fill all required fields.';
+        echo json_encode($response);
         exit;
     }
 
     // Check if email already exists
-    $check_email = $conn->prepare("SELECT email FROM students WHERE email = ?");
-    $check_email->bind_param("s", $email);
-    $check_email->execute();
-    $check_email->store_result();
+    $stmt = $conn->prepare("SELECT email FROM students WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
 
-    if ($check_email->num_rows > 0) {
-        echo "<script>
-                alert('This email is already registered. Please log in instead.');
-                window.history.back();
-              </script>";
+    if ($stmt->num_rows > 0) {
+        $response['message'] = 'Email already registered.';
+        echo json_encode($response);
         exit;
     }
+    $stmt->close();
 
-    $check_email->close();
-
-    // Hash password
+    // Hash password and insert
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    // Insert into the database
-    $sql = $conn->prepare("INSERT INTO students (firstname, lastname, email, password, gender, dob) VALUES (?, ?, ?, ?, ?, ?)");
-    $sql->bind_param("ssssss", $firstname, $lastname, $email, $hashed_password, $gender, $dob);
+    // Insert new user record into the database
+    $stmt = $conn->prepare("INSERT INTO students (firstname, lastname, email, password, gender, dob) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssss", $firstname, $lastname, $email, $hashed_password, $gender, $dob);
 
-    if ($sql->execute()) {
-        echo "<script>
-                alert('Registration successful! Please log in.');
-                window.location='login.html';
-              </script>";
+   // Execute the insert and build the response 
+    if ($stmt->execute()) {
+        $response['success'] = true;
+        $response['message'] = 'Registration successful!';
     } else {
-        echo "Error: " . $sql->error;
+        $response['message'] = 'Registration unsuccessful. Please try again.';
     }
-
-    $sql->close();
+    
+    // Clean up 
+    $stmt->close();
     $conn->close();
 }
+// Return JSON result to JS frontend
+echo json_encode($response);
+exit;
+
 ?>
 
 
