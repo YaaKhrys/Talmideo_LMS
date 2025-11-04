@@ -15,6 +15,7 @@ html {
 .dashboard-container {
   display: flex;
   height: 100vh; /* full screen height */
+  height: 100vh; /* full screen height */
 }
 
 /* Sidebar */
@@ -281,6 +282,8 @@ input:checked + .slider::before {
 }
 
 /* Left and Right columns stretch full height */
+.main-boxes,
+.info-boxes {
 .main-boxes,
 .info-boxes {
   display: flex;

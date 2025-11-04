@@ -51,15 +51,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt = $conn->prepare("INSERT INTO students (firstname, lastname, email, password, gender, dob) VALUES (?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssss", $firstname, $lastname, $email, $hashed_password, $gender, $dob);
 
-   // Execute the insert and build the response 
+   // Execute the insert and build the response
     if ($stmt->execute()) {
         $response['success'] = true;
         $response['message'] = 'Registration successful!';
     } else {
         $response['message'] = 'Registration unsuccessful. Please try again.';
     }
-    
-    // Clean up 
+
+    // Clean up
     $stmt->close();
     $conn->close();
 }

@@ -319,6 +319,18 @@ if (document.body.classList.contains("register-page")) {
         console.error("Registration error:", error);
         showAlert("❌ Network or server error. Please try again.", "error");
       }
+
+      if (!registerForm.checkValidity()) {
+        e.preventDefault();
+        showAlert("⚠️ Please fill in all required fields.", "info");
+        return;
+      }
+
+      // If you connect to backend later (PHP), you can handle:
+      // success or error from backend response here
+      // Example (temporary demo):
+      e.preventDefault();
+      showAlert("🎉 Registration successful! Welcome aboard.", "success");
     });
   }
 }
