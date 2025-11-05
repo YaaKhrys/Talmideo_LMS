@@ -277,12 +277,18 @@ if (document.body.classList.contains("register-page")) {
   const toggleIcons = document.querySelectorAll(".toggle-password");
   const dobInput = document.getElementById("dob");
 
-  // 1. JavaScript-injected honeypot
+  // 1. JavaScript injected ARIA-friendly honeypot
   if (registerForm) {
     const jsHoneypot = document.createElement("input");
     jsHoneypot.type = "text";
     jsHoneypot.name = "nickname"; // arbitrary name
-    jsHoneypot.style.display = "none"; // hidden
+    jsHoneypot.style.position = "absolute";
+    jsHoneypot.style.left = "-9999px";
+    jsHoneypot.style.width = "1px";
+    jsHoneypot.style.height = "1px";
+    jsHoneypot.style.opacity = "0";
+    jsHoneypot.setAttribute("aria-hidden", "true");
+    jsHoneypot.setAttribute("tabindex", "-1");
     jsHoneypot.autocomplete = "off";
     registerForm.appendChild(jsHoneypot);
 
