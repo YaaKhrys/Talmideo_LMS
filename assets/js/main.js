@@ -68,10 +68,10 @@ function dismissAlert(alert) {
 }
 
 /* ================================
-    2. HOME PAGE SCRIPTS (index.html)
+   2. HOME PAGE SCRIPTS (index.html)
 =================================== */
 if (document.body.classList.contains("home-page")) {
-  // Smooth scroll for anchors
+  // Smooth scroll for all in-page anchor links
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener("click", (e) => {
       e.preventDefault();
@@ -80,8 +80,10 @@ if (document.body.classList.contains("home-page")) {
     });
   });
 
-  // Scroll-to-top button
+  // Scroll-to-top button behavior
   const scrollBtn = document.getElementById("scrollTopBtn");
+
+  // Toggle visibility of the scroll button based on scroll position
   window.onscroll = () => {
     if (scrollBtn) {
       if (
@@ -95,6 +97,7 @@ if (document.body.classList.contains("home-page")) {
     }
   };
 
+  // Smoothly scroll back to top when button is clicked
   if (scrollBtn) {
     scrollBtn.addEventListener("click", () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -103,23 +106,26 @@ if (document.body.classList.contains("home-page")) {
 }
 
 /* ================================
-  3. PASSWORD UTILITIES (used on register/login pages)
+   3. PASSWORD UTILITIES
+   - Handles password strength, validation,
+     match checking, and visibility toggling.
 =================================== */
-
 function setupPasswordValidation(passwordInput, confirmInput = null) {
   const wrapper = passwordInput.closest(".password-wrapper");
 
-  // Create popup container
+  // Create password feedback popup container
   const popup = document.createElement("div");
   popup.classList.add("password-feedback");
 
-  // Strength bar
+  // Password strength bar element
   const strengthBar = document.createElement("div");
   strengthBar.classList.add("password-strength-bar");
 
-  // Criteria checks
+  // Criteria checklist container
   const criteriaContainer = document.createElement("div");
   criteriaContainer.classList.add("password-criteria");
+
+  // Define password requirements
   const criteriaLabels = [
     "8+ chars",
     "Uppercase",
@@ -127,41 +133,41 @@ function setupPasswordValidation(passwordInput, confirmInput = null) {
     "Number",
     "Symbol",
   ];
+
+  // Create checklist items with default ❌ indicators
   criteriaLabels.forEach((label) => {
     const span = document.createElement("span");
     span.textContent = `❌ ${label}`;
     criteriaContainer.appendChild(span);
   });
 
+  // Combine strength bar and checklist into popup
   popup.append(strengthBar, criteriaContainer);
   wrapper.appendChild(popup);
 
-  // Show popup on focus, hide on blur
+  // Show/hide popup on input focus/blur
   passwordInput.addEventListener("focus", () => (popup.style.display = "flex"));
   passwordInput.addEventListener("blur", () => (popup.style.display = "none"));
 
-  // Create match message once if confirm password exists
+  // Add confirm password match checker if applicable
   if (confirmInput) {
     const matchMessage = document.createElement("small");
     matchMessage.classList.add("confirm-message");
-    matchMessage.textContent = ""; // empty initially
+    matchMessage.textContent = "";
     matchMessage.style.fontSize = "10px";
     matchMessage.style.color = "#e74c3c";
-
-    // Absolutely position it below the input, independent of flex
     matchMessage.style.position = "absolute";
     matchMessage.style.left = "0";
-    matchMessage.style.top = `${confirmInput.offsetHeight + 4}px`; // 4px below input
+    matchMessage.style.top = `${confirmInput.offsetHeight + 4}px`;
     matchMessage.style.width = "100%";
-    matchMessage.style.pointerEvents = "none"; // so it doesn't block the eye icon
+    matchMessage.style.pointerEvents = "none";
 
-    // Make parent relative so absolute works
+    // Position parent wrapper for absolute placement
     const wrapper = confirmInput.closest(".password-wrapper");
     wrapper.style.position = "relative";
-
     wrapper.appendChild(matchMessage);
 
-    // Show/hide on focus/blur
+    // Show/hide match message and check in real-time
     confirmInput.addEventListener(
       "focus",
       () => (matchMessage.style.display = "block")
@@ -170,16 +176,16 @@ function setupPasswordValidation(passwordInput, confirmInput = null) {
       "blur",
       () => (matchMessage.style.display = "none")
     );
-
-    // Update text while typing
     confirmInput.addEventListener("input", () =>
       checkPasswordMatch(passwordInput, confirmInput)
     );
   }
 
-  // Update on input
+  // Evaluate password strength and update visuals dynamically
   passwordInput.addEventListener("input", () => {
     const value = passwordInput.value;
+
+    // Validate each strength criterion
     const checks = [
       value.length >= 8,
       /[A-Z]/.test(value),
@@ -188,15 +194,17 @@ function setupPasswordValidation(passwordInput, confirmInput = null) {
       /[^A-Za-z0-9]/.test(value),
     ];
 
-    // Update strength bar
+    // Calculate overall strength score
     const score = checks.filter(Boolean).length;
     const colors = ["#e74c3c", "#f39c12", "#27ae60", "#2ecc71"];
     const width = (score / checks.length) * 100;
+
+    // Update strength bar color and width
     strengthBar.style.width = `${width}%`;
     strengthBar.style.background =
       score === 0 ? "#ccc" : colors[Math.min(score - 1, colors.length - 1)];
 
-    // Update criteria checkmarks
+    // Update checklist icons and colors
     const spans = criteriaContainer.querySelectorAll("span");
     spans.forEach((span, index) => {
       span.textContent = `${checks[index] ? "✅" : "❌"} ${
@@ -205,14 +213,12 @@ function setupPasswordValidation(passwordInput, confirmInput = null) {
       span.style.color = checks[index] ? "#27ae60" : "#666";
     });
 
-    // Update confirm password match while typing
-    if (confirmInput && matchMessage) {
-      checkPasswordMatch(passwordInput, confirmInput);
-    }
+    // Recheck password match if confirm input exists
+    if (confirmInput) checkPasswordMatch(passwordInput, confirmInput);
   });
 }
 
-// Function to check if password and confirm password match
+// Validate if password and confirmation match
 function checkPasswordMatch(passwordInput, confirmInput) {
   const message = confirmInput
     .closest(".password-wrapper")
@@ -223,6 +229,7 @@ function checkPasswordMatch(passwordInput, confirmInput) {
     return;
   }
 
+  // Display match or mismatch feedback
   if (passwordInput.value === confirmInput.value) {
     message.textContent = "✅ Match";
     message.style.color = "#27ae60";
@@ -232,7 +239,7 @@ function checkPasswordMatch(passwordInput, confirmInput) {
   }
 }
 
-// Toggle password visibility
+// Toggle password visibility with eye icon interaction
 function togglePassword(inputId, iconElement) {
   const input = document.getElementById(inputId);
   if (!input || !iconElement) return;
@@ -240,6 +247,7 @@ function togglePassword(inputId, iconElement) {
   const isHidden = input.type === "password";
   input.type = isHidden ? "text" : "password";
 
+  // Update icon state and alt text
   if (isHidden) {
     iconElement.src = "assets/images/eye-password-show.png";
     iconElement.alt = "Hide password";
@@ -252,7 +260,9 @@ function togglePassword(inputId, iconElement) {
 }
 
 /* ==============================================
-    4. REGISTRATION PAGE SCRIPTS (register.html)
+   4. REGISTRATION PAGE SCRIPTS (register.html)
+   - Handles form validation, age restriction,
+     password validation, and server submission.
 ================================================= */
 if (document.body.classList.contains("register-page")) {
   const registerForm = document.getElementById("registerForm");
@@ -261,7 +271,7 @@ if (document.body.classList.contains("register-page")) {
   const toggleIcons = document.querySelectorAll(".toggle-password");
   const dobInput = document.getElementById("dob");
 
-  // DOB restriction
+  // Restrict date of birth to enforce minimum age
   if (dobInput) {
     const today = new Date();
     const minAge = 11;
@@ -273,26 +283,28 @@ if (document.body.classList.contains("register-page")) {
     dobInput.setAttribute("max", maxDate.toISOString().split("T")[0]);
   }
 
-  // Password toggle
+  // Enable password visibility toggle for all eye icons
   toggleIcons.forEach((icon) => {
     icon.addEventListener("click", () => {
       togglePassword(icon.dataset.target, icon);
     });
   });
 
-  // Initialize password validation
+  // Initialize password validation logic
   if (password) setupPasswordValidation(password, confirmPassword);
 
-  // Form submission via AJAX
+  // Handle registration form submission with async request
   if (registerForm) {
     registerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
+      // Validate password match before submitting
       if (password.value !== confirmPassword.value) {
         showAlert("❌ Passwords do not match.", "error");
         return;
       }
 
+      // Ensure all required fields are completed
       if (!registerForm.checkValidity()) {
         showAlert("⚠️ Please fill in all required fields.", "info");
         return;
@@ -301,50 +313,41 @@ if (document.body.classList.contains("register-page")) {
       const formData = new FormData(registerForm);
 
       try {
+        // Submit form via AJAX to server
         const response = await fetch("register.php", {
           method: "POST",
           body: formData,
         });
         const result = await response.json();
 
+        // Handle registration response
         if (result.success) {
           showAlert("🎉 Registration successful! Kindly log in.", "success");
           setTimeout(() => {
             window.location.href = "login.html?registered=1";
           }, 2000);
         } else {
-          showAlert("❌ Registration failed: " + result.message, "error");
+          showAlert(`❌ Registration failed: ${result.message}`, "error");
         }
       } catch (error) {
         console.error("Registration error:", error);
         showAlert("❌ Network or server error. Please try again.", "error");
       }
-
-      if (!registerForm.checkValidity()) {
-        e.preventDefault();
-        showAlert("⚠️ Please fill in all required fields.", "info");
-        return;
-      }
-
-      // If you connect to backend later (PHP), you can handle:
-      // success or error from backend response here
-      // Example (temporary demo):
-      e.preventDefault();
-      showAlert("🎉 Registration successful! Welcome aboard.", "success");
     });
   }
 }
 
 /* ===================================
    5. LOGIN PAGE SCRIPTS (login.html)
+   - Manages login form submission,
+     validation, and feedback alerts.
 ===================================== */
-
 if (document.body.classList.contains("login-page")) {
   const loginForm = document.getElementById("loginForm");
   const password = document.getElementById("password");
   const toggleIcons = document.querySelectorAll(".toggle-password");
 
-  // --- Show/hide password  ---
+  // Enable password visibility toggling
   toggleIcons.forEach((icon) => {
     icon.addEventListener("click", () => {
       const inputId = icon.dataset.target;
@@ -352,48 +355,47 @@ if (document.body.classList.contains("login-page")) {
     });
   });
 
-  // --- Password validation + strength meter  ---
+  // Initialize strength feedback for password input
   if (password) setupPasswordValidation(password);
 
+  // Handle login submission and response handling
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const emailInput = loginForm.querySelector('input[name="email"]'); // unified field name
+      const emailInput = loginForm.querySelector('input[name="email"]');
       const passwordInput = loginForm.querySelector('input[name="password"]');
       const submitBtn = loginForm.querySelector('button[type="submit"]');
 
-      // --- Validate required fields ---
+      // Basic field validation before submitting
       if (!emailInput.value.trim() || !passwordInput.value.trim()) {
         showAlert("⚠️ Please enter both email and password.", "info");
         return;
       }
 
       try {
-        submitBtn.disabled = true; // prevent multiple submissions
-
+        submitBtn.disabled = true; // Prevent multiple submissions
         const formData = new FormData(loginForm);
         const response = await fetch("login.php", {
           method: "POST",
           body: formData,
         });
-
         const result = await response.json();
 
+        // Handle successful login
         if (result.success) {
-          // --- Personalized success message ---
           const name = result.firstname ? result.firstname : "";
           const message = name
             ? `✅ Login successful! Welcome back, ${name}!`
             : "✅ Login successful!";
-
           showAlert(message, "success");
 
-          // --- Redirect after short delay ---
+          // Redirect to dashboard after short delay
           setTimeout(() => {
             window.location.href = "dashboard.php";
           }, 1500);
         } else {
+          // Display server-provided error
           showAlert(`❌ ${result.message}`, "error");
         }
       } catch (error) {
@@ -406,57 +408,54 @@ if (document.body.classList.contains("login-page")) {
   }
 }
 
-/* ====== LOGIN PAGE URL ALERTS ===== */
-
+// ====== LOGIN PAGE URL ALERTS =====
+// Handles alerts triggered by URL query parameters
 (function () {
   if (!document.body.classList.contains("login-page")) return;
 
   const urlParams = new URLSearchParams(window.location.search);
 
-  // ✅ Logout alert
+  // ✅ Show logout confirmation
   if (urlParams.get("logout") === "1") {
     showAlert("✅ Logged out.", "success");
     const cleanUrl = window.location.href.split("?")[0];
     window.history.replaceState({}, document.title, cleanUrl);
   }
 
-  // 🎉 Registration success
+  // 🎉 Registration success message
   if (urlParams.get("registered") === "1") {
     showAlert("🎉 Registration successful! Please log in.", "success");
     const cleanUrl = window.location.href.split("?")[0];
     window.history.replaceState({}, document.title, cleanUrl);
   }
 
-  // ⚠️ Session expired
+  // ⚠️ Session expired alert
   if (urlParams.get("sessionexpired") === "1") {
     showAlert("⚠️ Your session has expired. Please log in again.", "info");
     const cleanUrl = window.location.href.split("?")[0];
     window.history.replaceState({}, document.title, cleanUrl);
   }
 })();
+
 /* ===========================================
    6. DASHBOARD PAGE SCRIPTS (dashboard.html)
+   - Handles user greeting, sidebar toggle,
+     and dark/light theme management.
 ============================================== */
-
-// Display user first name
 document.addEventListener("DOMContentLoaded", () => {
-  // Example: you get the user's first name (hardcoded here for demo)
-  const userFirstName = "John"; // Replace with real data fetch or localStorage retrieval
-
-  // Select the element with the placeholder
+  // Example user greeting (replace with dynamic data in production)
+  const userFirstName = "John";
   const firstNameElem = document.getElementById("user-firstname");
-
   if (firstNameElem && userFirstName) {
     firstNameElem.textContent = userFirstName;
   }
 });
 
-// Menu(SideBar) toggle (light/dark)
+// Toggle sidebar collapse/expand state
 function toggleSidebar() {
   const sidebar = document.querySelector(".sidebar");
   const collapseBtn = document.querySelector(".collapse-btn");
   const expandBtn = document.querySelector(".expand-btn");
-
   sidebar.classList.toggle("collapsed");
 
   if (sidebar.classList.contains("collapsed")) {
@@ -468,20 +467,18 @@ function toggleSidebar() {
   }
 }
 
-// Theme toggle (light/dark)
+// Theme switcher between light and dark mode
 const themeToggleBtn = document.querySelector(".toggle-theme");
 if (themeToggleBtn) {
   themeToggleBtn.addEventListener("click", () => {
     document.body.classList.toggle("dark-theme");
-    // Optionally store preference in localStorage
-    if (document.body.classList.contains("dark-theme")) {
-      localStorage.setItem("theme", "dark");
-    } else {
-      localStorage.setItem("theme", "light");
-    }
+    localStorage.setItem(
+      "theme",
+      document.body.classList.contains("dark-theme") ? "dark" : "light"
+    );
   });
 
-  // On page load: apply stored theme preference
+  // Apply saved theme preference on page load
   window.addEventListener("DOMContentLoaded", () => {
     const storedTheme = localStorage.getItem("theme");
     if (storedTheme === "dark") {
@@ -489,7 +486,6 @@ if (themeToggleBtn) {
     }
   });
 }
-
 /* ================================
    7. Google analytics track Tag
 =================================== */

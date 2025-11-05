@@ -42,7 +42,7 @@ input[type="password"] {
 ========================== */
 
 .register-image-side {
-  flex: 1.3; /* Takes up 65% of screen */
+  flex: 1.2; /* Takes up 60% of screen */
   background-image: url("../images/Landing\ Page\ Chuch\ Image.png");
   background-size: cover;
   background-position: center;
@@ -55,7 +55,7 @@ input[type="password"] {
 ========================== */
 
 .register-form-side {
-  flex: 0.7; /* Takes up 35% of screen */
+  flex: 0.8; /* Takes up 40% of screen */
   background-color: #ffffff;
   display: flex;
   justify-content: center;
