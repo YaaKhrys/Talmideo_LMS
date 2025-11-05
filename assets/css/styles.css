@@ -655,16 +655,13 @@ footer {
   display: none; /* JS will toggle this */
   transition: all 0.3s ease;
 }
-}
 
 #scrollTopBtn:hover {
   background-color: #f3c677;
   color: #000;
-}
 }
 
 #scrollTopBtn img {
   width: 20px;
   height: 20px;
 }
-
