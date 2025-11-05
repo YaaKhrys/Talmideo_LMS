@@ -16,30 +16,43 @@ $response = ['success' => false, 'message' => 'Registration unsuccessful.'];
 // Only handle POST requests
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    // --- Honeypot check ---
-    if (!empty($_POST['website'])) {
-    http_response_code(400);
-    echo json_encode([
-        "success" => false,
-        "message" => "Bot submission detected."
-    ]);
-    exit;
-}
+    // Collect honeypot fields
+    $website = $_POST['website'] ?? '';
+    $nickname = $_POST['nickname'] ?? '';
+    $form_render_time = $_POST['form_render_time'] ?? 0;
 
-    // --- Timing honeypot check ---
-    // If form submitted in less than 3 seconds, likely a bot
-    if (isset($_POST['loadTime'])) {
-        $loadTime = (int)$_POST['loadTime'];     // Get JS timestamp
-        $now = round(microtime(true) * 1000);    // Current time in ms
-        if (($now - $loadTime) / 1000 < 3) {
-            http_response_code(400);
-            echo json_encode([
-                'success' => false,
-                'message' => 'Suspiciously fast submission.'
-            ]);
-            exit;
-        }
+    // Classic CSS-hidden honeypot
+    if (!empty($website)) {
+        http_response_code(400);
+        echo json_encode([
+            "success" => false,
+            "message" => "Bot detected (website field)."
+        ]);
+        exit;
     }
+
+    // JS-injected honeypot
+    if (!empty($nickname)) {
+        http_response_code(400);
+        echo json_encode([
+            "success" => false,
+            "message" => "Bot detected (nickname field)."
+        ]);
+        exit;
+    }
+
+    // Time-based honeypot (minimum 3 seconds)
+    $min_time_seconds = 3;
+    if (time() - ($form_render_time / 1000) < $min_time_seconds) {
+        http_response_code(400);
+        echo json_encode([
+            "success" => false,
+            "message" => "Bot detected (form submitted too fast)."
+        ]);
+        exit;
+    }
+
+
 
     // --- Collect & sanitize user inputs ---
     $firstname = trim($_POST['firstname']);  // First name

@@ -15,95 +15,101 @@
    - Handles notifications throughout the site
    - Can be called from ANY page, anytime.
 ============================================================ */
-function showAlert(message, type = "info", duration = 4000) {
-  // Find the container
-  let alertContainer = document.querySelector(".page-alert-container");
+(function () {
+  // Ensure container exists once
+  let alertContainer = null;
 
-  // If container doesn't exist, create it at top of body
-  if (!alertContainer) {
-    alertContainer = document.createElement("div");
-    alertContainer.className = "page-alert-container";
-    alertContainer.style.position = "fixed";
-    alertContainer.style.top = "20px";
-    alertContainer.style.left = "50%";
-    alertContainer.style.transform = "translateX(-50%)";
-    alertContainer.style.display = "flex";
-    alertContainer.style.flexDirection = "column";
-    alertContainer.style.alignItems = "center";
-    alertContainer.style.gap = "12px";
-    alertContainer.style.zIndex = "9999";
-    alertContainer.style.pointerEvents = "none"; // allow clicks to pass through
-    document.body.appendChild(alertContainer);
+  function getAlertContainer() {
+    if (!alertContainer) {
+      alertContainer = document.createElement("div");
+      alertContainer.className = "page-alert-container";
+      // Always fixed, top-centered
+      Object.assign(alertContainer.style, {
+        position: "fixed",
+        top: "20px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "12px",
+        zIndex: "99999",
+        pointerEvents: "none", // clicks pass through container
+        width: "auto",
+        maxWidth: "90%",
+      });
+      document.body.appendChild(alertContainer);
+    }
+    return alertContainer;
   }
 
-  // Create alert element
-  const alert = document.createElement("div");
-  alert.className = `page-alert ${type}`;
-  alert.style.pointerEvents = "auto"; // enable click on close button
-  alert.innerHTML = `
-    <div class="alert-message">${message}</div>
-    <button class="alert-close">&times;</button>
-  `;
+  // Show alert function
+  window.showAlert = function (message, type = "info", duration = 4000) {
+    const container = getAlertContainer();
 
-  alertContainer.appendChild(alert);
-
-  // Trigger CSS animation
-  setTimeout(() => alert.classList.add("show"), 50);
-
-  // Close button handler
-  alert.querySelector(".alert-close").addEventListener("click", () => {
-    dismissAlert(alert);
-  });
-
-  // Auto dismiss after duration
-  setTimeout(() => dismissAlert(alert), duration);
-}
-
-function dismissAlert(alert) {
-  alert.classList.remove("show");
-  alert.classList.add("fade-out");
-  setTimeout(() => {
-    if (alert && alert.parentNode) alert.parentNode.removeChild(alert);
-  }, 600);
-}
-
-/* ================================
-   2. HOME PAGE SCRIPTS (index.html)
-=================================== */
-if (document.body.classList.contains("home-page")) {
-  // Smooth scroll for all in-page anchor links
-  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-    anchor.addEventListener("click", (e) => {
-      e.preventDefault();
-      const target = document.querySelector(anchor.getAttribute("href"));
-      if (target) target.scrollIntoView({ behavior: "smooth" });
+    const alert = document.createElement("div");
+    alert.className = `page-alert ${type}`;
+    Object.assign(alert.style, {
+      pointerEvents: "auto", // allow close button click
+      minWidth: "250px",
+      maxWidth: "500px",
+      padding: "12px 20px",
+      borderRadius: "6px",
+      boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
+      backgroundColor:
+        type === "success"
+          ? "#6ad296ff"
+          : type === "error"
+          ? "#e78075ff"
+          : "#eac07dff",
+      color: "#fff",
+      opacity: "0",
+      transform: "translateY(-10px)",
+      transition: "all 0.3s ease",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
     });
-  });
 
-  // Scroll-to-top button behavior
-  const scrollBtn = document.getElementById("scrollTopBtn");
+    alert.innerHTML = `
+      <div class="alert-message">${message}</div>
+      <button class="alert-close" style="
+        margin-left: 12px;
+        background: transparent;
+        border: none;
+        color: #fff;
+        font-size: 18px;
+        cursor: pointer;
+      ">&times;</button>
+    `;
 
-  // Toggle visibility of the scroll button based on scroll position
-  window.onscroll = () => {
-    if (scrollBtn) {
-      if (
-        document.body.scrollTop > 100 ||
-        document.documentElement.scrollTop > 100
-      ) {
-        scrollBtn.style.display = "block";
-      } else {
-        scrollBtn.style.display = "none";
-      }
-    }
+    container.appendChild(alert);
+
+    // Show animation
+    setTimeout(() => {
+      alert.style.opacity = "1";
+      alert.style.transform = "translateY(0)";
+    }, 50);
+
+    // Close button
+    alert.querySelector(".alert-close").addEventListener("click", () => {
+      dismissAlert(alert);
+    });
+
+    // Auto dismiss
+    setTimeout(() => dismissAlert(alert), duration);
   };
 
-  // Smoothly scroll back to top when button is clicked
-  if (scrollBtn) {
-    scrollBtn.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
+  // Dismiss function
+  function dismissAlert(alert) {
+    if (!alert) return;
+    alert.style.opacity = "0";
+    alert.style.transform = "translateY(-10px)";
+    setTimeout(() => {
+      if (alert.parentNode) alert.parentNode.removeChild(alert);
+    }, 300);
   }
-}
+})();
 
 /* ================================
    3. PASSWORD UTILITIES
@@ -271,6 +277,30 @@ if (document.body.classList.contains("register-page")) {
   const toggleIcons = document.querySelectorAll(".toggle-password");
   const dobInput = document.getElementById("dob");
 
+  // 1. JavaScript-injected honeypot
+  if (registerForm) {
+    const jsHoneypot = document.createElement("input");
+    jsHoneypot.type = "text";
+    jsHoneypot.name = "nickname"; // arbitrary name
+    jsHoneypot.style.display = "none"; // hidden
+    jsHoneypot.autocomplete = "off";
+    registerForm.appendChild(jsHoneypot);
+
+    // 2. Time-based honeypot
+    const timeHoneypot = document.createElement("input");
+    timeHoneypot.type = "hidden";
+    timeHoneypot.name = "form_render_time";
+    timeHoneypot.value = Date.now();
+    registerForm.appendChild(timeHoneypot);
+
+    // Optional: log to console for testing
+    console.log(
+      "JS honeypots initialized:",
+      jsHoneypot.name,
+      timeHoneypot.name
+    );
+  }
+
   // Restrict date of birth to enforce minimum age
   if (dobInput) {
     const today = new Date();
@@ -298,11 +328,31 @@ if (document.body.classList.contains("register-page")) {
     registerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      // Honeypot check
+      // Classic CSS honeypot check
       const honeypot = registerForm.querySelector('input[name="website"]');
       if (honeypot && honeypot.value.trim() !== "") {
         showAlert("❌ Suspicious activity detected.", "error");
         return;
+      }
+
+      // JS honeypot check
+      const jsHoneypot = registerForm.querySelector('input[name="nickname"]');
+      if (jsHoneypot && jsHoneypot.value.trim() !== "") {
+        showAlert("❌ Bot detected (nickname field).", "error");
+        return;
+      }
+
+      // Time-based honeypot check (optional, server-side recommended)
+      const timeHoneypot = registerForm.querySelector(
+        'input[name="form_render_time"]'
+      );
+      if (timeHoneypot) {
+        const elapsed = Date.now() - parseInt(timeHoneypot.value, 10);
+        if (elapsed < 3000) {
+          // e.g., submitted too quickly (<3s)
+          showAlert("❌ Suspicious activity detected.", "error");
+          return;
+        }
       }
 
       // Validate password match before submitting
@@ -344,6 +394,7 @@ if (document.body.classList.contains("register-page")) {
     });
   }
 }
+
 /* ===================================
    5. LOGIN PAGE SCRIPTS (login.html)
    - Manages login form submission,
