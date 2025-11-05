@@ -48,15 +48,6 @@
     return alertContainer;
   }
 
-  // Function to wrap emojis in a span
-  function wrapEmojis(text) {
-    // Simple regex to catch most common emojis
-    return text.replace(
-      /([\u231A-\uD83E\uDDFF])/g,
-      '<span class="emoji">$1</span>'
-    );
-  }
-
   // Show alert function
   window.showAlert = function (message, type = "info", duration = 4000) {
     const container = getAlertContainer();
@@ -89,47 +80,47 @@
       gap: "3rem",
       flexWrap: "wrap", // responsive wrapping for long text
       wordBreak: "break-word",
+      position: "relative", // needed for absolute close button
     });
 
-    // Wrap emojis dynamically
-    const messageWithEmojis = wrapEmojis(message);
-
+    // Insert alert content with emojis wrapped in spans
     alert.innerHTML = `
       <div class="alert-message" style="
         flex: 1;
         font-weight: 500;
         padding-right: 2rem; /* space for close button */
       ">
-        ${messageWithEmojis}
-      </div>
-      <button class="alert-close" style="
-        position: absolute;
-        top: 30%;
-        right: 0.75rem; /* distance from right edge */
-        transform: translateY(-50%);
-        background: transparent;
-        border: none;
-        color: #fff;
-        font-size: 1.25rem;
-        line-height: 1;
-        cursor: pointer;
-      ">&times;</button>
-    `;
+        ${message.replace(
+          /([\u{1F300}-\u{1F9FF}])/gu,
+          '<span class="emoji">$1</span>'
+        )}
+    </div>
+    <button class="alert-close" style="
+      position: absolute;
+      top: 30%;
+      right: 0.75rem; /* distance from right edge */
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 1.25rem;
+      line-height: 1;
+      cursor: pointer;
+    ">&times;</button>
+  `;
 
-    // Inject emoji styling once
-    if (!document.getElementById("alert-emoji-style")) {
-      const style = document.createElement("style");
-      style.id = "alert-emoji-style";
-      style.textContent = `
-      .page-alert .alert-message span.emoji {
-        font-size: 0.8rem;
-        line-height: 1;
-      }
-    `;
-      document.head.appendChild(style);
-    }
-
+    // Append first so querySelectorAll finds emojis
     container.appendChild(alert);
+
+    // Apply emoji sizing per alert type
+    const emojiStyle = {
+      info: "font-size: 1rem;",
+      success: "font-size: 1rem;",
+      error: "font-size: 0.8rem;",
+    };
+    alert.querySelectorAll(".emoji").forEach((el) => {
+      el.style.cssText = emojiStyle[type] || "font-size: 0.95rem;";
+    });
 
     // Show animation
     setTimeout(() => {
