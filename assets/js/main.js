@@ -298,13 +298,6 @@ if (document.body.classList.contains("register-page")) {
     timeHoneypot.name = "form_render_time";
     timeHoneypot.value = Date.now();
     registerForm.appendChild(timeHoneypot);
-
-    // Optional: log to console for testing
-    console.log(
-      "JS honeypots initialized:",
-      jsHoneypot.name,
-      timeHoneypot.name
-    );
   }
 
   // Restrict date of birth to enforce minimum age
@@ -348,7 +341,7 @@ if (document.body.classList.contains("register-page")) {
         return;
       }
 
-      // Time-based honeypot check (optional, server-side recommended)
+      // Time-based honeypot check
       const timeHoneypot = registerForm.querySelector(
         'input[name="form_render_time"]'
       );
