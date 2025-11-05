@@ -15,6 +15,7 @@
    - Handles notifications throughout the site
    - Can be called from ANY page, anytime.
 ============================================================ */
+
 (function () {
   // Ensure container exists once
   let alertContainer = null;
@@ -23,16 +24,20 @@
     if (!alertContainer) {
       alertContainer = document.createElement("div");
       alertContainer.className = "page-alert-container";
+
+      // Accessibility: announce new alerts to screen readers
+      alertContainer.setAttribute("aria-live", "polite");
+
       // Always fixed, top-centered
       Object.assign(alertContainer.style, {
         position: "fixed",
-        top: "20px",
+        top: "1.25rem", // ~20px
         left: "50%",
         transform: "translateX(-50%)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: "12px",
+        gap: "0.75rem", // ~12px vertical space between stacked alerts
         zIndex: "99999",
         pointerEvents: "none", // clicks pass through container
         width: "auto",
@@ -43,6 +48,15 @@
     return alertContainer;
   }
 
+  // Function to wrap emojis in a span
+  function wrapEmojis(text) {
+    // Simple regex to catch most common emojis
+    return text.replace(
+      /([\u231A-\uD83E\uDDFF])/g,
+      '<span class="emoji">$1</span>'
+    );
+  }
+
   // Show alert function
   window.showAlert = function (message, type = "info", duration = 4000) {
     const container = getAlertContainer();
@@ -51,37 +65,69 @@
     alert.className = `page-alert ${type}`;
     Object.assign(alert.style, {
       pointerEvents: "auto", // allow close button click
-      minWidth: "250px",
-      maxWidth: "500px",
-      padding: "12px 20px",
-      borderRadius: "6px",
-      boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
+      minWidth: "15rem", // ~240px
+      maxWidth: "31.25rem", // ~500px
+      padding: "1rem 1.5rem", // ~16px vertical, 24px horizontal
+      borderRadius: "0.5rem", // ~8px
+      boxShadow: "0 0.25rem 0.625rem rgba(0,0,0,0.15)",
       backgroundColor:
         type === "success"
-          ? "#6ad296ff"
+          ? "#7cb066b6"
           : type === "error"
-          ? "#e78075ff"
-          : "#eac07dff",
+          ? "#c63b3bb5"
+          : "#c9d6b3c4",
       color: "#fff",
+      fontSize: "0.95rem",
+      lineHeight: "1.4",
+      textAlign: "left",
       opacity: "0",
-      transform: "translateY(-10px)",
+      transform: "translateY(-0.625rem)", // ~10px slide animation
       transition: "all 0.3s ease",
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
+      gap: "3rem",
+      flexWrap: "wrap", // responsive wrapping for long text
+      wordBreak: "break-word",
     });
 
+    // Wrap emojis dynamically
+    const messageWithEmojis = wrapEmojis(message);
+
     alert.innerHTML = `
-      <div class="alert-message">${message}</div>
+      <div class="alert-message" style="
+        flex: 1;
+        font-weight: 500;
+        padding-right: 2rem; /* space for close button */
+      ">
+        ${messageWithEmojis}
+      </div>
       <button class="alert-close" style="
-        margin-left: 12px;
+        position: absolute;
+        top: 30%;
+        right: 0.75rem; /* distance from right edge */
+        transform: translateY(-50%);
         background: transparent;
         border: none;
         color: #fff;
-        font-size: 18px;
+        font-size: 1.25rem;
+        line-height: 1;
         cursor: pointer;
       ">&times;</button>
     `;
+
+    // Inject emoji styling once
+    if (!document.getElementById("alert-emoji-style")) {
+      const style = document.createElement("style");
+      style.id = "alert-emoji-style";
+      style.textContent = `
+      .page-alert .alert-message span.emoji {
+        font-size: 0.8rem;
+        line-height: 1;
+      }
+    `;
+      document.head.appendChild(style);
+    }
 
     container.appendChild(alert);
 
@@ -96,18 +142,18 @@
       dismissAlert(alert);
     });
 
-    // Auto dismiss
+    // Auto-dismiss after duration
     setTimeout(() => dismissAlert(alert), duration);
   };
 
-  // Dismiss function
+  // Dismiss function (Smooth fade-out + cleanup)
   function dismissAlert(alert) {
     if (!alert) return;
     alert.style.opacity = "0";
-    alert.style.transform = "translateY(-10px)";
+    alert.style.transform = "translateY(-0.625rem)";
     setTimeout(() => {
       if (alert.parentNode) alert.parentNode.removeChild(alert);
-    }, 300);
+    }, 350);
   }
 })();
 
@@ -337,7 +383,7 @@ if (document.body.classList.contains("register-page")) {
       // JS honeypot check
       const jsHoneypot = registerForm.querySelector('input[name="nickname"]');
       if (jsHoneypot && jsHoneypot.value.trim() !== "") {
-        showAlert("❌ Bot detected (nickname field).", "error");
+        showAlert("❌ Suspicious activity detected.", "error");
         return;
       }
 
