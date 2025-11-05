@@ -298,6 +298,13 @@ if (document.body.classList.contains("register-page")) {
     registerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
+      // Honeypot check
+      const honeypot = registerForm.querySelector('input[name="website"]');
+      if (honeypot && honeypot.value.trim() !== "") {
+        showAlert("❌ Suspicious activity detected.", "error");
+        return;
+      }
+
       // Validate password match before submitting
       if (password.value !== confirmPassword.value) {
         showAlert("❌ Passwords do not match.", "error");
@@ -327,6 +334,7 @@ if (document.body.classList.contains("register-page")) {
             window.location.href = "login.html?registered=1";
           }, 2000);
         } else {
+          // Fixed syntax for template literal
           showAlert(`❌ Registration failed: ${result.message}`, "error");
         }
       } catch (error) {
@@ -336,7 +344,6 @@ if (document.body.classList.contains("register-page")) {
     });
   }
 }
-
 /* ===================================
    5. LOGIN PAGE SCRIPTS (login.html)
    - Manages login form submission,
