@@ -188,80 +188,104 @@ function setupPasswordValidation(passwordInput, confirmInput = null) {
   popup.append(strengthBar, criteriaContainer);
   wrapper.appendChild(popup);
 
-  // Show/hide popup on input focus/blur
+  // --- Popup visibility handling ---
   passwordInput.addEventListener("focus", () => (popup.style.display = "flex"));
-  passwordInput.addEventListener("blur", () => (popup.style.display = "none"));
+  passwordInput.addEventListener("blur", () => {
+    // small delay to avoid flicker when tabbing quickly
+    setTimeout(() => {
+      if (
+        !passwordInput.matches(":focus") &&
+        (!confirmInput || !confirmInput.matches(":focus"))
+      ) {
+        popup.style.display = "none";
+      }
+    }, 200);
+  });
 
-  // Add confirm password match checker if applicable
+  // --- Confirm password match message ---
   if (confirmInput) {
     const matchMessage = document.createElement("small");
     matchMessage.classList.add("confirm-message");
     matchMessage.textContent = "";
-    matchMessage.style.fontSize = "10px";
-    matchMessage.style.color = "#e74c3c";
-    matchMessage.style.position = "absolute";
-    matchMessage.style.left = "0";
-    matchMessage.style.top = `${confirmInput.offsetHeight + 4}px`;
-    matchMessage.style.width = "100%";
-    matchMessage.style.pointerEvents = "none";
+    Object.assign(matchMessage.style, {
+      fontSize: "10px",
+      color: "#e74c3c",
+      position: "absolute",
+      left: "0",
+      top: `${confirmInput.offsetHeight + 4}px`,
+      width: "100%",
+      pointerEvents: "none",
+    });
 
-    // Position parent wrapper for absolute placement
-    const wrapper = confirmInput.closest(".password-wrapper");
-    wrapper.style.position = "relative";
-    wrapper.appendChild(matchMessage);
+    const confirmWrapper = confirmInput.closest(".password-wrapper");
+    confirmWrapper.style.position = "relative";
+    confirmWrapper.appendChild(matchMessage);
 
-    // Show/hide match message and check in real-time
-    confirmInput.addEventListener(
-      "focus",
-      () => (matchMessage.style.display = "block")
-    );
-    confirmInput.addEventListener(
-      "blur",
-      () => (matchMessage.style.display = "none")
-    );
+    confirmInput.addEventListener("focus", () => {
+      matchMessage.style.display = "block";
+    });
+    confirmInput.addEventListener("blur", () => {
+      matchMessage.style.display = "none";
+    });
     confirmInput.addEventListener("input", () =>
       checkPasswordMatch(passwordInput, confirmInput)
     );
   }
 
-  // Evaluate password strength and update visuals dynamically
+  // --- Debounced strength checker ---
+  let debounceTimer;
   passwordInput.addEventListener("input", () => {
-    const value = passwordInput.value;
-
-    // Validate each strength criterion
-    const checks = [
-      value.length >= 8,
-      /[A-Z]/.test(value),
-      /[a-z]/.test(value),
-      /\d/.test(value),
-      /[^A-Za-z0-9]/.test(value),
-    ];
-
-    // Calculate overall strength score
-    const score = checks.filter(Boolean).length;
-    const colors = ["#e74c3c", "#f39c12", "#27ae60", "#2ecc71"];
-    const width = (score / checks.length) * 100;
-
-    // Update strength bar color and width
-    strengthBar.style.width = `${width}%`;
-    strengthBar.style.background =
-      score === 0 ? "#ccc" : colors[Math.min(score - 1, colors.length - 1)];
-
-    // Update checklist icons and colors
-    const spans = criteriaContainer.querySelectorAll("span");
-    spans.forEach((span, index) => {
-      span.textContent = `${checks[index] ? "✅" : "❌"} ${
-        criteriaLabels[index]
-      }`;
-      span.style.color = checks[index] ? "#27ae60" : "#666";
-    });
-
-    // Recheck password match if confirm input exists
-    if (confirmInput) checkPasswordMatch(passwordInput, confirmInput);
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      updatePasswordFeedback(
+        passwordInput,
+        confirmInput,
+        strengthBar,
+        criteriaContainer,
+        criteriaLabels
+      );
+    }, 150);
   });
 }
 
-// Validate if password and confirmation match
+// --- Helper: evaluate password strength ---
+function updatePasswordFeedback(
+  passwordInput,
+  confirmInput,
+  strengthBar,
+  criteriaContainer,
+  criteriaLabels
+) {
+  const value = passwordInput.value;
+
+  const checks = [
+    value.length >= 8,
+    /[A-Z]/.test(value),
+    /[a-z]/.test(value),
+    /\d/.test(value),
+    /[^A-Za-z0-9]/.test(value),
+  ];
+
+  const score = checks.filter(Boolean).length;
+  const colors = ["#e74c3c", "#e67e22", "#f1c40f", "#b2cc2eff", "#27ae60"];
+  const width = (score / checks.length) * 100;
+
+  strengthBar.style.width = `${width}%`;
+  strengthBar.style.background =
+    score === 0 ? "#ccc" : colors[Math.min(score - 1, colors.length - 1)];
+
+  const spans = criteriaContainer.querySelectorAll("span");
+  spans.forEach((span, index) => {
+    span.textContent = `${checks[index] ? "✅" : "❌"} ${
+      criteriaLabels[index]
+    }`;
+    span.style.color = checks[index] ? "#27ae60" : "#666";
+  });
+
+  if (confirmInput) checkPasswordMatch(passwordInput, confirmInput);
+}
+
+// --- Helper: check match ---
 function checkPasswordMatch(passwordInput, confirmInput) {
   const message = confirmInput
     .closest(".password-wrapper")
@@ -272,7 +296,6 @@ function checkPasswordMatch(passwordInput, confirmInput) {
     return;
   }
 
-  // Display match or mismatch feedback
   if (passwordInput.value === confirmInput.value) {
     message.textContent = "✅ Match";
     message.style.color = "#27ae60";
@@ -282,7 +305,7 @@ function checkPasswordMatch(passwordInput, confirmInput) {
   }
 }
 
-// Toggle password visibility with eye icon interaction
+// --- Helper: toggle password visibility ---
 function togglePassword(inputId, iconElement) {
   const input = document.getElementById(inputId);
   if (!input || !iconElement) return;
@@ -290,7 +313,6 @@ function togglePassword(inputId, iconElement) {
   const isHidden = input.type === "password";
   input.type = isHidden ? "text" : "password";
 
-  // Update icon state and alt text
   if (isHidden) {
     iconElement.src = "assets/images/eye-password-show.png";
     iconElement.alt = "Hide password";
@@ -301,7 +323,6 @@ function togglePassword(inputId, iconElement) {
     iconElement.classList.remove("eye-open");
   }
 }
-
 /* ==============================================
    4. REGISTRATION PAGE SCRIPTS (register.html)
    - Handles form validation, age restriction,
