@@ -500,21 +500,16 @@ if (document.body.classList.contains("register-page")) {
 ===================================== */
 if (document.body.classList.contains("login-page")) {
   const loginForm = document.getElementById("loginForm");
-  const password = document.getElementById("password");
   const toggleIcons = document.querySelectorAll(".toggle-password");
 
-  // Enable password visibility toggling
+  // Enable password visibility toggle for all eye icons
   toggleIcons.forEach((icon) => {
     icon.addEventListener("click", () => {
-      const inputId = icon.dataset.target;
-      togglePassword(inputId, icon);
+      togglePassword(icon.dataset.target, icon);
     });
   });
 
-  // Initialize strength feedback for password input
-  if (password) setupPasswordValidation(password);
-
-  // Handle login submission and response handling
+  // Handle login form submission with async request
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -522,23 +517,45 @@ if (document.body.classList.contains("login-page")) {
       const emailInput = loginForm.querySelector('input[name="email"]');
       const passwordInput = loginForm.querySelector('input[name="password"]');
       const submitBtn = loginForm.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn.innerHTML;
+      const now = Date.now();
 
-      // Basic field validation before submitting
-      if (!emailInput.value.trim() || !passwordInput.value.trim()) {
+      // Prevent rapid multiple submissions (3-second throttle)
+      if (
+        loginForm.dataset.lastSubmitTime &&
+        now - loginForm.dataset.lastSubmitTime < 3000
+      ) {
+        showAlert("⏳ Please wait a moment before submitting again.", "info");
+        return;
+      }
+
+      // Trim whitespace from inputs
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      // Basic field validation
+      if (!email || !password) {
         showAlert("⚠️ Please enter both email and password.", "info");
         return;
       }
 
+      // Disable submit button + show spinner
+      submitBtn.disabled = true;
+      submitBtn.classList.add("btn-disabled");
+      submitBtn.innerHTML = `<span class="spinner"></span> Signing in...`;
+
+      // Prepare form data
+      const formData = new FormData(loginForm);
+      formData.set("email", email);
+      formData.set("password", password);
+
       try {
-        submitBtn.disabled = true; // Prevent multiple submissions
-        const formData = new FormData(loginForm);
         const response = await fetch("login.php", {
           method: "POST",
           body: formData,
         });
         const result = await response.json();
 
-        // Handle successful login
         if (result.success) {
           const name = result.firstname ? result.firstname : "";
           const message = name
@@ -551,47 +568,47 @@ if (document.body.classList.contains("login-page")) {
             window.location.href = "dashboard.php";
           }, 1500);
         } else {
-          // Display server-provided error
           showAlert(`❌ ${result.message}`, "error");
         }
       } catch (error) {
         console.error("Login error:", error);
         showAlert("❌ Network or server error. Please try again.", "error");
       } finally {
+        // Restore button state
         submitBtn.disabled = false;
+        submitBtn.classList.remove("btn-disabled");
+        submitBtn.innerHTML = originalBtnText;
+        loginForm.dataset.lastSubmitTime = now;
       }
     });
   }
+
+  // ====== LOGIN PAGE URL ALERTS =====
+  // Handles alerts triggered by URL query parameters
+  (function () {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const showUrlAlert = (param, message, type) => {
+      if (urlParams.get(param) === "1") {
+        showAlert(message, type);
+        const cleanUrl = window.location.href.split("?")[0];
+        window.history.replaceState({}, document.title, cleanUrl);
+      }
+    };
+
+    showUrlAlert("logout", "✅ Logged out.", "success");
+    showUrlAlert(
+      "registered",
+      "🎉 Registration successful! Please log in.",
+      "success"
+    );
+    showUrlAlert(
+      "sessionexpired",
+      "⚠️ Your session has expired. Please log in again.",
+      "info"
+    );
+  })();
 }
-
-// ====== LOGIN PAGE URL ALERTS =====
-// Handles alerts triggered by URL query parameters
-(function () {
-  if (!document.body.classList.contains("login-page")) return;
-
-  const urlParams = new URLSearchParams(window.location.search);
-
-  // ✅ Show logout confirmation
-  if (urlParams.get("logout") === "1") {
-    showAlert("✅ Logged out.", "success");
-    const cleanUrl = window.location.href.split("?")[0];
-    window.history.replaceState({}, document.title, cleanUrl);
-  }
-
-  // 🎉 Registration success message
-  if (urlParams.get("registered") === "1") {
-    showAlert("🎉 Registration successful! Please log in.", "success");
-    const cleanUrl = window.location.href.split("?")[0];
-    window.history.replaceState({}, document.title, cleanUrl);
-  }
-
-  // ⚠️ Session expired alert
-  if (urlParams.get("sessionexpired") === "1") {
-    showAlert("⚠️ Your session has expired. Please log in again.", "info");
-    const cleanUrl = window.location.href.split("?")[0];
-    window.history.replaceState({}, document.title, cleanUrl);
-  }
-})();
 
 /* ===========================================
    6. DASHBOARD PAGE SCRIPTS (dashboard.html)
