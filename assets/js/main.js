@@ -335,7 +335,7 @@ if (document.body.classList.contains("register-page")) {
   const toggleIcons = document.querySelectorAll(".toggle-password");
   const dobInput = document.getElementById("dob");
 
-  // 1. JavaScript injected ARIA-friendly honeypot
+  // JavaScript injected ARIA-friendly honeypot
   if (registerForm) {
     const jsHoneypot = document.createElement("input");
     jsHoneypot.type = "text";
@@ -350,7 +350,7 @@ if (document.body.classList.contains("register-page")) {
     jsHoneypot.autocomplete = "off";
     registerForm.appendChild(jsHoneypot);
 
-    // 2. Time-based honeypot
+    // Time-based honeypot
     const timeHoneypot = document.createElement("input");
     timeHoneypot.type = "hidden";
     timeHoneypot.name = "form_render_time";
@@ -385,68 +385,109 @@ if (document.body.classList.contains("register-page")) {
     registerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      // Classic CSS honeypot check
+      // Capture the submit button and its original label ===
+      const submitBtn = registerForm.querySelector(".signup-btn");
+      const originalBtnText = submitBtn.innerHTML;
+      const now = Date.now();
+
+      // Prevent multiple rapid submissions (3-second throttle) ===
+      if (
+        registerForm.dataset.lastSubmitTime &&
+        now - registerForm.dataset.lastSubmitTime < 3000
+      ) {
+        showAlert("⏳ Please wait a moment before submitting again.", "info");
+        return;
+      }
+
+      // Disable submit button & display loading spinner
+      // Disable submit button & display loading spinner
+      submitBtn.disabled = true;
+      submitBtn.classList.add("btn-disabled");
+      submitBtn.innerHTML = `
+      <span class="spinner"></span> Submitting...
+`;
+
+      // Honeypot validation to prevent spam/bot submissions ===
       const honeypot = registerForm.querySelector('input[name="website"]');
       if (honeypot && honeypot.value.trim() !== "") {
         showAlert("❌ Suspicious activity detected.", "error");
+        resetButton();
         return;
       }
 
-      // JS honeypot check
       const jsHoneypot = registerForm.querySelector('input[name="nickname"]');
       if (jsHoneypot && jsHoneypot.value.trim() !== "") {
         showAlert("❌ Suspicious activity detected.", "error");
+        resetButton();
         return;
       }
 
-      // Time-based honeypot check
       const timeHoneypot = registerForm.querySelector(
         'input[name="form_render_time"]'
       );
       if (timeHoneypot) {
         const elapsed = Date.now() - parseInt(timeHoneypot.value, 10);
         if (elapsed < 3000) {
-          // e.g., submitted too quickly (<3s)
+          // Form submitted suspiciously fast (<3s)
           showAlert("❌ Suspicious activity detected.", "error");
+          resetButton();
           return;
         }
       }
 
-      // Validate password match before submitting
+      // Ensure passwords match before submission
       if (password.value !== confirmPassword.value) {
         showAlert("❌ Passwords do not match.", "error");
+        resetButton();
         return;
       }
 
-      // Ensure all required fields are completed
+      // Check that all required form fields are valid
       if (!registerForm.checkValidity()) {
         showAlert("⚠️ Please fill in all required fields.", "info");
+        resetButton();
         return;
       }
 
+      // Prepare data for AJAX submission
       const formData = new FormData(registerForm);
 
       try {
-        // Submit form via AJAX to server
+        // Submit form data asynchronously to register.php
         const response = await fetch("register.php", {
           method: "POST",
           body: formData,
         });
+
+        // Expecting a JSON response { success: true/false, message: "..." }
         const result = await response.json();
 
-        // Handle registration response
+        // === 9. Handle success or error feedback ===
         if (result.success) {
           showAlert("🎉 Registration successful! Kindly log in.", "success");
+          registerForm.dataset.lastSubmitTime = now;
+
+          // Redirect to login after a short delay
           setTimeout(() => {
             window.location.href = "login.html?registered=1";
           }, 2000);
         } else {
-          // Fixed syntax for template literal
           showAlert(`❌ Registration failed: ${result.message}`, "error");
         }
       } catch (error) {
+        // Handle unexpected network/server errors
         console.error("Registration error:", error);
         showAlert("❌ Network or server error. Please try again.", "error");
+      } finally {
+        // Re-enable button and restore original text
+        resetButton();
+        registerForm.dataset.lastSubmitTime = now;
+      }
+      // Helper: Restore button to normal interactive state
+      function resetButton() {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove("btn-disabled");
+        submitBtn.innerHTML = originalBtnText;
       }
     });
   }
