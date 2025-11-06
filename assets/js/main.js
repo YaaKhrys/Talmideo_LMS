@@ -66,7 +66,7 @@
           ? "#7cb066b6"
           : type === "error"
           ? "#c63b3bb5"
-          : "#c9d6b3c4",
+          : "#323030d7",
       color: "#fff",
       fontSize: "0.95rem",
       lineHeight: "1.4",
@@ -147,6 +147,44 @@
     }, 350);
   }
 })();
+
+/* ================================
+   2. HOME PAGE SCRIPTS (index.html)
+=================================== */
+if (document.body.classList.contains("home-page")) {
+  // Smooth scroll for all in-page anchor links
+  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener("click", (e) => {
+      e.preventDefault();
+      const target = document.querySelector(anchor.getAttribute("href"));
+      if (target) target.scrollIntoView({ behavior: "smooth" });
+    });
+  });
+
+  // Scroll-to-top button behavior
+  const scrollBtn = document.getElementById("scrollTopBtn");
+
+  // Toggle visibility of the scroll button based on scroll position
+  window.onscroll = () => {
+    if (scrollBtn) {
+      if (
+        document.body.scrollTop > 100 ||
+        document.documentElement.scrollTop > 100
+      ) {
+        scrollBtn.style.display = "block";
+      } else {
+        scrollBtn.style.display = "none";
+      }
+    }
+  };
+
+  // Smoothly scroll back to top when button is clicked
+  if (scrollBtn) {
+    scrollBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+}
 
 /* ================================
    3. PASSWORD UTILITIES
