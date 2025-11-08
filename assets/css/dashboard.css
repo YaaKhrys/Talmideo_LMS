@@ -14,7 +14,8 @@ html {
 /* Layout */
 .dashboard-container {
   display: flex;
-  height: 100vh;/* full screen height */
+  height: 100vh; /* full screen height */
+  height: 100vh; /* full screen height */
 }
 
 /* Sidebar */
@@ -280,15 +281,17 @@ input:checked + .slider::before {
   height: 100%; /* ensure workspace fills remaining vertical space */
 }
 
-
 /* Left and Right columns stretch full height */
-.main-boxes, .info-boxes {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  height: 100%;
+.main-boxes,
+.info-boxes {
+  .main-boxes,
+  .info-boxes {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+  }
 }
-
 
 /* Left section */
 .main-boxes {

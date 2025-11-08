@@ -1,0 +1,106 @@
+2025-11-07 12:02:10 - SERVER -> CLIENT: 220 smtp.gmail.com ESMTP 4fb4d7f45d1cf-6411f862bd0sm4138586a12.26 - gsmtp
+
+2025-11-07 12:02:10 - CLIENT -> SERVER: EHLO christabellowusu.eagletechafrica.com
+
+2025-11-07 12:02:10 - SERVER -> CLIENT: 250-smtp.gmail.com at your service, [2a02:4780:9:530:0:1677:9a57:1]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+2025-11-07 12:02:10 - CLIENT -> SERVER: STARTTLS
+
+2025-11-07 12:02:10 - SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+2025-11-07 12:02:10 - CLIENT -> SERVER: EHLO christabellowusu.eagletechafrica.com
+
+2025-11-07 12:02:10 - SERVER -> CLIENT: 250-smtp.gmail.com at your service, [2a02:4780:9:530:0:1677:9a57:1]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+2025-11-07 12:02:10 - CLIENT -> SERVER: AUTH LOGIN
+
+2025-11-07 12:02:10 - SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+2025-11-07 12:02:10 - CLIENT -> SERVER: [credentials hidden]
+2025-11-07 12:02:10 - SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+2025-11-07 12:02:10 - CLIENT -> SERVER: [credentials hidden]
+2025-11-07 12:02:11 - SERVER -> CLIENT: 235 2.7.0 Accepted
+
+2025-11-07 12:02:11 - CLIENT -> SERVER: MAIL FROM:<talmiddeo@gmail.com>
+
+2025-11-07 12:02:11 - SERVER -> CLIENT: 250 2.1.0 OK 4fb4d7f45d1cf-6411f862bd0sm4138586a12.26 - gsmtp
+
+2025-11-07 12:02:11 - CLIENT -> SERVER: RCPT TO:<nebitey413@fergetic.com>
+
+2025-11-07 12:02:11 - SERVER -> CLIENT: 250 2.1.5 OK 4fb4d7f45d1cf-6411f862bd0sm4138586a12.26 - gsmtp
+
+2025-11-07 12:02:11 - CLIENT -> SERVER: DATA
+
+2025-11-07 12:02:11 - SERVER -> CLIENT: 354 Go ahead 4fb4d7f45d1cf-6411f862bd0sm4138586a12.26 - gsmtp
+
+2025-11-07 12:02:11 - CLIENT -> SERVER: Date: Fri, 7 Nov 2025 12:02:10 +0000
+
+2025-11-07 12:02:11 - CLIENT -> SERVER: To: Jonathan Jones <nebitey413@fergetic.com>
+
+2025-11-07 12:02:11 - CLIENT -> SERVER: From: =?iso-8859-1?Q?Talmid=C4=93o_PHPMailer?= <talmiddeo@gmail.com>
+
+2025-11-07 12:02:11 - CLIENT -> SERVER: Subject: =?iso-8859-1?Q?Verify_Your_Email_-_Talmid=C4=93o?=
+
+2025-11-07 12:02:11 - CLIENT -> SERVER: Message-ID: <449hcXfPoNGsJdWrTvTUU8X9PzvVgn9EQ2b1xl9ETA@christabellowusu.eagletechafrica.com>
+
+2025-11-07 12:02:11 - CLIENT -> SERVER: X-Mailer: PHPMailer 7.0.0 (https://github.com/PHPMailer/PHPMailer)
+
+2025-11-07 12:02:11 - CLIENT -> SERVER: MIME-Version: 1.0
+
+2025-11-07 12:02:11 - CLIENT -> SERVER: Content-Type: text/html; charset=iso-8859-1
+
+2025-11-07 12:02:11 - CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+2025-11-07 12:02:11 - CLIENT -> SERVER: 
+
+2025-11-07 12:02:11 - CLIENT -> SERVER: 
+
+2025-11-07 12:02:11 - CLIENT -> SERVER: <div style='font-family:Arial,sans-serif; background:#fafafa; padding:20px;'>
+
+2025-11-07 12:02:11 - CLIENT -> SERVER:   <div style='max-width:600px; margin:auto; background:#ffffff; border-radius:8px; padding:20px;'>
+
+2025-11-07 12:02:11 - CLIENT -> SERVER:     <h2 style='color:#333;'>Welcome, Jonathan!</h2>
+
+2025-11-07 12:02:11 - CLIENT -> SERVER:     <p>Thank you for registering with <strong>Talmidēo</strong>.</p>
+
+2025-11-07 12:02:11 - CLIENT -> SERVER:     <p>Please verify your email within <strong>10 minutes</strong> to activate your account.</p>
+
+2025-11-07 12:02:11 - CLIENT -> SERVER:     <p>Your email verification code is:</p>
+
+2025-11-07 12:02:11 - CLIENT -> SERVER:     <div style='font-size:22px; font-weight:bold; letter-spacing:4px; color:#333;'>778464</div>
+
+2025-11-07 12:02:11 - CLIENT -> SERVER:     <p>Or click the button below to verify your account:</p>
+
+2025-11-07 12:02:11 - CLIENT -> SERVER:     <a href='https://christabellowusu.eagletechafrica.com/verify_email.php?email=nebitey413%40fergetic.com&token=778464' style='display:inline-block; background:#50623a; color:#fff; padding:10px 16px; text-decoration:none; border-radius:6px;'>Verify Email</a>
+
+2025-11-07 12:02:11 - CLIENT -> SERVER:     <p style='font-size:12px; color:#777; margin-top:15px;'>If you didn’t request this, you can safely ignore this email.</p>
+
+2025-11-07 12:02:11 - CLIENT -> SERVER:   </div>
+
+2025-11-07 12:02:11 - CLIENT -> SERVER: </div>
+
+2025-11-07 12:02:11 - CLIENT -> SERVER: 
+
+2025-11-07 12:02:11 - CLIENT -> SERVER: .
+
+2025-11-07 12:02:12 - SERVER -> CLIENT: 250 2.0.0 OK  1762516932 4fb4d7f45d1cf-6411f862bd0sm4138586a12.26 - gsmtp
+
+2025-11-07 12:02:12 - CLIENT -> SERVER: QUIT
+
+2025-11-07 12:02:12 - SERVER -> CLIENT: 221 2.0.0 closing connection 4fb4d7f45d1cf-6411f862bd0sm4138586a12.26 - gsmtp
+

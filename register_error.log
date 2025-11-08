@@ -1,0 +1,10 @@
+[07-Nov-2025 10:34:48 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Illegal mix of collations for operation 'UNION' in /home/u376937047/domains/eagletechafrica.com/public_html/christabellowusu/register.php:86
+Stack trace:
+#0 /home/u376937047/domains/eagletechafrica.com/public_html/christabellowusu/register.php(86): mysqli->prepare()
+#1 {main}
+  thrown in /home/u376937047/domains/eagletechafrica.com/public_html/christabellowusu/register.php on line 86
+[07-Nov-2025 10:34:57 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Illegal mix of collations for operation 'UNION' in /home/u376937047/domains/eagletechafrica.com/public_html/christabellowusu/register.php:86
+Stack trace:
+#0 /home/u376937047/domains/eagletechafrica.com/public_html/christabellowusu/register.php(86): mysqli->prepare()
+#1 {main}
+  thrown in /home/u376937047/domains/eagletechafrica.com/public_html/christabellowusu/register.php on line 86

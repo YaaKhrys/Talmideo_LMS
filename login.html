@@ -25,6 +25,9 @@
 </head>
 <body class="login-page">
 
+    <!-- Global Alert Container (for all pages) -->
+  <div class="page-alert-container"></div>
+
   <!-- ====== Login Page Container ====== -->
   <div class="login-container">
 
@@ -50,7 +53,7 @@
         <p class="form-subtitle">Welcome back! Please login to your account.</p>
 
         <!-- ====== Login Form ====== -->
-        <form action="/login.php" method="POST">
+        <form id="loginForm" action="/login.php" method="POST">
 
           <!-- Email Field -->
           <div class="form-group">
@@ -95,7 +98,11 @@
   </div>
 
    <!-- JavaScript -->
-    <script src="assets/js/main.js"></script>
+    <script>
+        const script = document.createElement('script');
+        script.src = 'assets/js/main.js?v=' + new Date().getTime();
+        document.head.appendChild(script);
+    </script>
 
   </script>
 
