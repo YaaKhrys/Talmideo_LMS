@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+  <head>
     <!-- ============================================
     META: Page Configuration and SEO
     ============================================ -->
@@ -8,10 +9,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Talmidēo</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Talmidēo</title>
 
     <!--Link to main CSS-->
     <link rel="stylesheet" href="assets/css/styles.css" />
+    <!--Link to main CSS-->
+    <link rel="stylesheet" href="assets/css/styles.css" />
 
+    <!--Link to Google Fonts: Inter, Fondamento, Cormorant Garamond-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https:fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Fondamento:ital@0;1&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <!--Link to Google Fonts: Inter, Fondamento, Cormorant Garamond-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https:fonts.gstatic.com" crossorigin />
@@ -36,7 +49,27 @@
     ></script>
     <script src="assets/js/analytics.js"></script>
   </head>
+    <!--Favicon-->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="90x90"
+      href="assets/images/favicon.png"
+    />
 
+    <!--Google Analytics Tag-->
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-KGV5ZELN62"
+    ></script>
+    <script src="assets/js/analytics.js"></script>
+  </head>
+
+  <!--Page content starts here-->
+  <body class="home-page">
+    <!-- Global Alert Container (for all pages) -->
+    <div class="page-alert-container"></div>
   <!--Page content starts here-->
   <body class="home-page">
     <!-- Global Alert Container (for all pages) -->
@@ -55,7 +88,25 @@
             <a href="index.html">Talmidēo</a>
           </span>
         </div>
+      <div class="container">
+        <div class="logo logo-container">
+          <a href="index.html">
+            <img src="assets/images/Talmidēo Logo.png" alt="Talmidēo Icon" />
+          </a>
+          <span class="logo-text">
+            <a href="index.html">Talmidēo</a>
+          </span>
+        </div>
 
+        <nav class="nav-links">
+          <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="bible.html">Bible</a></li>
+            <li><a href="#readings">Readings</a></li>
+            <li><a href="login.html">Sign In</a></li>
+          </ul>
+        </nav>
+      </div>
         <nav class="nav-links">
           <ul class="nav-links">
             <li><a href="#about">About</a></li>
@@ -90,10 +141,44 @@
       <div class="hero-buttons">
         <a href="#about" class="btn btn-light">Learn More</a>
       </div>
+      <div class="container hero-content">
+        <div class="hero-text">
+          <div class="hero-message">
+            <h4>
+              More than just study. It is a becoming, a living, a blossoming on
+              the narrow path.
+            </h4>
+            <h5 class="hero-subtitle">Every Step, A Becoming!</h5>
+          </div>
+        </div>
+      </div>
+      <div class="hero-buttons">
+        <a href="#about" class="btn btn-light">Learn More</a>
+      </div>
     </section>
 
     <!-- Section 2: About -->
     <section id="about" class="section about-section">
+      <div class="container about-content">
+        <div class="about-message-box">
+          <h2>What is Talmidēo?</h2>
+          <p>
+            Talmidēo is a Christ-centered learning platform designed to guide
+            and support intentional discipleship through Scripture-based study.
+          </p>
+          <p>
+            It offers structure, simplicity, and spiritual focus, for those
+            becoming more like Christ, day by day.
+          </p>
+          <p>
+            More than a walk. A becoming, a transformation, lit by the Word and
+            Christ’s love 🤍.
+          </p>
+        </div>
+      </div>
+      <div class="btn about-btn">
+        <a href="about.html" class="btn">Learn More</a>
+      </div>
       <div class="container about-content">
         <div class="about-message-box">
           <h2>What is Talmidēo?</h2>
@@ -235,12 +320,131 @@
           </div>
         </div>
       </div>
+      <div class="container">
+        <h2>Recent Bible Readings and Stories</h2>
+        <div class="carousel">
+          <!-- Placeholder story cards -->
+          <div class="story-card">
+            <img
+              src="assets/images/David and Goliath.jpg"
+              alt="David and Goliath"
+            />
+            <h4>David and Goliath</h4>
+            <p class="story-description">
+              In a world of giants, faith and courage stand taller. David's
+              victory over Goliath reminds us that no obstacle is too big when
+              God is with us.
+            </p>
+            <p class="story-reference"><em>1 Samuel 17:45</em></p>
+          </div>
+          <div class="story-card">
+            <img
+              src="assets/images/bible-humble-lamb-elIVi1vTDHA-unsplash.jpg"
+              alt="Jesus and Disciples"
+            />
+            <h4>The Bible: Living and Active</h4>
+            <p class="story-description">
+              The Word of God is not passive, it cuts, it shapes, and it brings
+              life. It speaks directly to the heart, dividing truth from lies.
+            </p>
+            <p class="story-reference"><em>Hebrews 4:12</em></p>
+          </div>
+          <div class="story-card">
+            <img
+              src="assets/images/birth or Christ-sincerely-media-nvJnDGoM2H0-unsplash.jpg"
+              alt="Mary and Joseph with baby Jesus and others"
+            />
+            <h4>Stewards of God's Promise</h4>
+            <p class="story-description">
+              In the midst of danger and uncertainty, God chose Mary and Joseph
+              to raise the Savior of the world. Their obedience, courage, and
+              care reflect the sacred responsibility God places in the hands of
+              parents today.
+            </p>
+            <p class="story-reference"><em>Luke 2:11</em></p>
+          </div>
+          <div class="story-card">
+            <img
+              src="assets/images/Jesus & His Disciples.jpg"
+              alt="Jesus and Disciples"
+            />
+            <h4>Jesus and His Talmid</h4>
+            <p class="story-description">
+              Fellowship is more than food, it’s unity, service, and love. Jesus
+              called His disciples into deep communion.
+            </p>
+            <p class="story-reference"><em>Luke 22:14‑20</em></p>
+          </div>
+          <div class="story-card">
+            <img
+              src="assets/images/Christias Praying Together.jpg"
+              alt="Jesus and Disciples"
+            />
+            <h4>Being a Christian Today</h4>
+            <p class="story-description">
+              Culture shifts, truth doesn’t. Not obsolete; chosen for this time.
+              God still shapes lives through us.
+            </p>
+            <p class="story-reference"><em>Romans 12:2</em></p>
+          </div>
+          <div class="story-card">
+            <img
+              src="assets/images/Faith in a Touch.jpg"
+              alt="Picture art of a woman touching Jesus"
+            />
+            <h4>Faith in a Touch</h4>
+            <p class="story-description">
+              Faith moves mountains, no matter the size.
+            </p>
+            <p class="story-reference"><em>Mark 5:34</em></p>
+          </div>
+          <div class="story-card">
+            <img
+              src="assets/images/Jesus walks on water.jpg"
+              alt="Picture art of Jesus walking on water with Peter and his Disciples watching from the boat"
+            />
+            <h4>Eyes on Jesus</h4>
+            <p class="story-description">
+              Faith stays afloat when we fix our gaze on Jesus, the anchor and
+              the vine.
+            </p>
+            <p class="story-reference"><em>Matthew 14:22‑33</em></p>
+            <p></p>
+          </div>
+          <div class="story-card">
+            <img
+              src="assets/images/matthew-19-23-30-reflection-susan-mattison.webp"
+              alt="Picture art of a man with a needle held up to a camel"
+            />
+            <h4>The Fake Gate Theory</h4>
+            <p class="story-description">
+              The gate is narrow (Matthew 7:13‑14) and costly. You can't bring
+              pride, wealth, or self-dependence through it. Only surrender fits.
+            </p>
+            <p class="story-reference"><em>Matthew 19:23‑24</em></p>
+          </div>
+          <div class="story-card">
+            <img
+              src="assets/images/Burning bush.jpg"
+              alt="Picture art of Moses facing a burning bush"
+            />
+            <h4>The Call from the Bush</h4>
+            <p class="story-description">
+              God called Moses through fire. He still calls us today, not to
+              comfort, but to lead, serve, and walk with Him.
+            </p>
+            <p class="story-reference"><em>Exodus 3:1–12</em></p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Scroll to top button -->
     <button id="scrollTopBtn" title="Go to top">
       <img src="assets/images/Page up.png" alt="Scroll to top" />
+      <img src="assets/images/Page up.png" alt="Scroll to top" />
     </button>
+
 
     <!-- Footer -->
     <footer>
@@ -260,9 +464,35 @@
           /></a>
         </div>
       </div>
+      <div class="footer-container footer-top">
+        <div class="logo-text footer-logo">Talmidēo</div>
+        <div class="footer-social-icons">
+          <a href="#" aria-label="Facebook"
+            ><img src="assets/images/Facebook_icon_(black).png" alt="Facebook"
+          /></a>
+          <a href="#" aria-label="X"
+            ><img src="assets/images/X logo.png" alt="X" id="x-logo"
+          /></a>
+          <a href="#" aria-label="Instagram"
+            ><img
+              src="assets/images/instagram-logo-black-transparent.png"
+              alt="Instagram"
+          /></a>
+        </div>
+      </div>
 
       <div class="footer-separator"></div>
+      <div class="footer-separator"></div>
 
+      <div class="footer-container footer-bottom">
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Cookie Policy</a>
+          <a href="#">Disclaimer</a>
+          <a href="#">T&Cs</a>
+        </div>
+        <div class="footer-copyright">&copy; 2025 Talmidēo</div>
+      </div>
       <div class="footer-container footer-bottom">
         <div class="footer-links">
           <a href="#">Privacy Policy</a>
@@ -281,3 +511,4 @@
         document.head.appendChild(script);
     </script>
 </html>
+

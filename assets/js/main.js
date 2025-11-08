@@ -14,7 +14,152 @@
    1. UNIVERSAL ALERT SYSTEM
    - Handles notifications throughout the site
    - Can be called from ANY page, anytime.
+   1. Universal Alert System
+   2. Home Page (index.html)
+   3. Registration Page (register.html)
+   4. Login Page (login.html)
+   5. Password Utilities
+   6. Dashboard Page (dashboard.html)
+   7. Google Analytics
 ============================================================ */
+
+/* ===========================================================
+   1. UNIVERSAL ALERT SYSTEM
+   - Handles notifications throughout the site
+   - Can be called from ANY page, anytime.
+============================================================ */
+
+(function () {
+  // Ensure container exists once
+  let alertContainer = null;
+
+  function getAlertContainer() {
+    if (!alertContainer) {
+      alertContainer = document.createElement("div");
+      alertContainer.className = "page-alert-container";
+
+      // Accessibility: announce new alerts to screen readers
+      alertContainer.setAttribute("aria-live", "polite");
+
+      // Always fixed, top-centered
+      Object.assign(alertContainer.style, {
+        position: "fixed",
+        top: "1.25rem", // ~20px
+        left: "50%",
+        transform: "translateX(-50%)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "0.75rem", // ~12px vertical space between stacked alerts
+        zIndex: "99999",
+        pointerEvents: "none", // clicks pass through container
+        width: "auto",
+        maxWidth: "90%",
+      });
+      document.body.appendChild(alertContainer);
+    }
+    return alertContainer;
+  }
+
+  // Show alert function
+  window.showAlert = function (message, type = "info", duration = 4000) {
+    const container = getAlertContainer();
+
+    const alert = document.createElement("div");
+    alert.className = `page-alert ${type}`;
+    Object.assign(alert.style, {
+      pointerEvents: "auto", // allow close button click
+      minWidth: "15rem", // ~240px
+      maxWidth: "31.25rem", // ~500px
+      padding: "1rem 1.5rem", // ~16px vertical, 24px horizontal
+      borderRadius: "0.5rem", // ~8px
+      boxShadow: "0 0.25rem 0.625rem rgba(0,0,0,0.15)",
+      backgroundColor:
+        type === "success"
+          ? "#7cb066b6"
+          : type === "error"
+          ? "#c63b3bb5"
+          : "#323030d7",
+      color: "#fff",
+      fontSize: "0.95rem",
+      lineHeight: "1.4",
+      textAlign: "left",
+      opacity: "0",
+      transform: "translateY(-0.625rem)", // ~10px slide animation
+      transition: "all 0.3s ease",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      gap: "3rem",
+      flexWrap: "wrap", // responsive wrapping for long text
+      wordBreak: "break-word",
+      position: "relative", // needed for absolute close button
+    });
+
+    // Insert alert content with emojis wrapped in spans
+    alert.innerHTML = `
+      <div class="alert-message" style="
+        flex: 1;
+        font-weight: 500;
+        padding-right: 2rem; /* space for close button */
+      ">
+        ${message.replace(
+          /([\u{1F300}-\u{1F9FF}])/gu,
+          '<span class="emoji">$1</span>'
+        )}
+    </div>
+    <button class="alert-close" style="
+      position: absolute;
+      top: 30%;
+      right: 0.75rem; /* distance from right edge */
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 1.25rem;
+      line-height: 1;
+      cursor: pointer;
+    ">&times;</button>
+  `;
+
+    // Append first so querySelectorAll finds emojis
+    container.appendChild(alert);
+
+    // Apply emoji sizing per alert type
+    const emojiStyle = {
+      info: "font-size: 1rem;",
+      success: "font-size: 1rem;",
+      error: "font-size: 0.8rem;",
+    };
+    alert.querySelectorAll(".emoji").forEach((el) => {
+      el.style.cssText = emojiStyle[type] || "font-size: 0.95rem;";
+    });
+
+    // Show animation
+    setTimeout(() => {
+      alert.style.opacity = "1";
+      alert.style.transform = "translateY(0)";
+    }, 50);
+
+    // Close button
+    alert.querySelector(".alert-close").addEventListener("click", () => {
+      dismissAlert(alert);
+    });
+
+    // Auto-dismiss after duration
+    setTimeout(() => dismissAlert(alert), duration);
+  };
+
+  // Dismiss function (Smooth fade-out + cleanup)
+  function dismissAlert(alert) {
+    if (!alert) return;
+    alert.style.opacity = "0";
+    alert.style.transform = "translateY(-0.625rem)";
+    setTimeout(() => {
+      if (alert.parentNode) alert.parentNode.removeChild(alert);
+    }, 350);
+  }
+})();
 
 (function () {
   // Ensure container exists once
@@ -150,8 +295,10 @@
 
 /* ================================
    2. HOME PAGE SCRIPTS (index.html)
+   2. HOME PAGE SCRIPTS (index.html)
 =================================== */
 if (document.body.classList.contains("home-page")) {
+  // Smooth scroll for all in-page anchor links
   // Smooth scroll for all in-page anchor links
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener("click", (e) => {
@@ -177,7 +324,29 @@ if (document.body.classList.contains("home-page")) {
       }
     }
   };
+  // Scroll-to-top button behavior
+  const scrollBtn = document.getElementById("scrollTopBtn");
 
+  // Toggle visibility of the scroll button based on scroll position
+  window.onscroll = () => {
+    if (scrollBtn) {
+      if (
+        document.body.scrollTop > 100 ||
+        document.documentElement.scrollTop > 100
+      ) {
+        scrollBtn.style.display = "block";
+      } else {
+        scrollBtn.style.display = "none";
+      }
+    }
+  };
+
+  // Smoothly scroll back to top when button is clicked
+  if (scrollBtn) {
+    scrollBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
   // Smoothly scroll back to top when button is clicked
   if (scrollBtn) {
     scrollBtn.addEventListener("click", () => {
@@ -190,21 +359,29 @@ if (document.body.classList.contains("home-page")) {
    3. PASSWORD UTILITIES
    - Handles password strength, validation,
      match checking, and visibility toggling.
+   3. PASSWORD UTILITIES
+   - Handles password strength, validation,
+     match checking, and visibility toggling.
 =================================== */
 function setupPasswordValidation(passwordInput, confirmInput = null) {
   const wrapper = passwordInput.closest(".password-wrapper");
 
   // Create password feedback popup container
+  // Create password feedback popup container
   const popup = document.createElement("div");
   popup.classList.add("password-feedback");
 
+  // Password strength bar element
   // Password strength bar element
   const strengthBar = document.createElement("div");
   strengthBar.classList.add("password-strength-bar");
 
   // Criteria checklist container
+  // Criteria checklist container
   const criteriaContainer = document.createElement("div");
   criteriaContainer.classList.add("password-criteria");
+
+  // Define password requirements
 
   // Define password requirements
   const criteriaLabels = [
@@ -216,6 +393,8 @@ function setupPasswordValidation(passwordInput, confirmInput = null) {
   ];
 
   // Create checklist items with default ❌ indicators
+
+  // Create checklist items with default ❌ indicators
   criteriaLabels.forEach((label) => {
     const span = document.createElement("span");
     span.textContent = `❌ ${label}`;
@@ -223,9 +402,11 @@ function setupPasswordValidation(passwordInput, confirmInput = null) {
   });
 
   // Combine strength bar and checklist into popup
+  // Combine strength bar and checklist into popup
   popup.append(strengthBar, criteriaContainer);
   wrapper.appendChild(popup);
 
+  // --- Popup visibility handling ---
   // --- Popup visibility handling ---
   passwordInput.addEventListener("focus", () => (popup.style.display = "flex"));
   passwordInput.addEventListener("blur", () => {
@@ -239,11 +420,37 @@ function setupPasswordValidation(passwordInput, confirmInput = null) {
       }
     }, 200);
   });
+  passwordInput.addEventListener("blur", () => {
+    // small delay to avoid flicker when tabbing quickly
+    setTimeout(() => {
+      if (
+        !passwordInput.matches(":focus") &&
+        (!confirmInput || !confirmInput.matches(":focus"))
+      ) {
+        popup.style.display = "none";
+      }
+    }, 200);
+  });
 
+  // --- Confirm password match message ---
   // --- Confirm password match message ---
   if (confirmInput) {
     const matchMessage = document.createElement("small");
     matchMessage.classList.add("confirm-message");
+    matchMessage.textContent = "";
+    Object.assign(matchMessage.style, {
+      fontSize: "10px",
+      color: "#e74c3c",
+      position: "absolute",
+      left: "0",
+      top: `${confirmInput.offsetHeight + 4}px`,
+      width: "100%",
+      pointerEvents: "none",
+    });
+
+    const confirmWrapper = confirmInput.closest(".password-wrapper");
+    confirmWrapper.style.position = "relative";
+    confirmWrapper.appendChild(matchMessage);
     matchMessage.textContent = "";
     Object.assign(matchMessage.style, {
       fontSize: "10px",
@@ -265,6 +472,12 @@ function setupPasswordValidation(passwordInput, confirmInput = null) {
     confirmInput.addEventListener("blur", () => {
       matchMessage.style.display = "none";
     });
+    confirmInput.addEventListener("focus", () => {
+      matchMessage.style.display = "block";
+    });
+    confirmInput.addEventListener("blur", () => {
+      matchMessage.style.display = "none";
+    });
     confirmInput.addEventListener("input", () =>
       checkPasswordMatch(passwordInput, confirmInput)
     );
@@ -272,7 +485,39 @@ function setupPasswordValidation(passwordInput, confirmInput = null) {
 
   // --- Debounced strength checker ---
   let debounceTimer;
+  // --- Debounced strength checker ---
+  let debounceTimer;
   passwordInput.addEventListener("input", () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      updatePasswordFeedback(
+        passwordInput,
+        confirmInput,
+        strengthBar,
+        criteriaContainer,
+        criteriaLabels
+      );
+    }, 150);
+  });
+}
+
+// --- Helper: evaluate password strength ---
+function updatePasswordFeedback(
+  passwordInput,
+  confirmInput,
+  strengthBar,
+  criteriaContainer,
+  criteriaLabels
+) {
+  const value = passwordInput.value;
+
+  const checks = [
+    value.length >= 8,
+    /[A-Z]/.test(value),
+    /[a-z]/.test(value),
+    /\d/.test(value),
+    /[^A-Za-z0-9]/.test(value),
+  ];
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
       updatePasswordFeedback(
@@ -311,7 +556,21 @@ function updatePasswordFeedback(
   strengthBar.style.width = `${width}%`;
   strengthBar.style.background =
     score === 0 ? "#ccc" : colors[Math.min(score - 1, colors.length - 1)];
+  const score = checks.filter(Boolean).length;
+  const colors = ["#e74c3c", "#e67e22", "#f1c40f", "#b2cc2eff", "#27ae60"];
+  const width = (score / checks.length) * 100;
 
+  strengthBar.style.width = `${width}%`;
+  strengthBar.style.background =
+    score === 0 ? "#ccc" : colors[Math.min(score - 1, colors.length - 1)];
+
+  const spans = criteriaContainer.querySelectorAll("span");
+  spans.forEach((span, index) => {
+    span.textContent = `${checks[index] ? "✅" : "❌"} ${
+      criteriaLabels[index]
+    }`;
+    span.style.color = checks[index] ? "#27ae60" : "#666";
+  });
   const spans = criteriaContainer.querySelectorAll("span");
   spans.forEach((span, index) => {
     span.textContent = `${checks[index] ? "✅" : "❌"} ${
@@ -321,8 +580,10 @@ function updatePasswordFeedback(
   });
 
   if (confirmInput) checkPasswordMatch(passwordInput, confirmInput);
+  if (confirmInput) checkPasswordMatch(passwordInput, confirmInput);
 }
 
+// --- Helper: check match ---
 // --- Helper: check match ---
 function checkPasswordMatch(passwordInput, confirmInput) {
   const message = confirmInput
@@ -343,6 +604,7 @@ function checkPasswordMatch(passwordInput, confirmInput) {
   }
 }
 
+// --- Helper: toggle password visibility ---
 // --- Helper: toggle password visibility ---
 function togglePassword(inputId, iconElement) {
   const input = document.getElementById(inputId);
@@ -398,6 +660,30 @@ if (document.body.classList.contains("register-page")) {
   }
 
   // Restrict date of birth to enforce minimum age
+  // JavaScript injected ARIA-friendly honeypot
+  if (registerForm) {
+    const jsHoneypot = document.createElement("input");
+    jsHoneypot.type = "text";
+    jsHoneypot.name = "nickname"; // arbitrary name
+    jsHoneypot.style.position = "absolute";
+    jsHoneypot.style.left = "-9999px";
+    jsHoneypot.style.width = "1px";
+    jsHoneypot.style.height = "1px";
+    jsHoneypot.style.opacity = "0";
+    jsHoneypot.setAttribute("aria-hidden", "true");
+    jsHoneypot.setAttribute("tabindex", "-1");
+    jsHoneypot.autocomplete = "off";
+    registerForm.appendChild(jsHoneypot);
+
+    // Time-based honeypot
+    const timeHoneypot = document.createElement("input");
+    timeHoneypot.type = "hidden";
+    timeHoneypot.name = "form_render_time";
+    timeHoneypot.value = Date.now();
+    registerForm.appendChild(timeHoneypot);
+  }
+
+  // Restrict date of birth to enforce minimum age
   if (dobInput) {
     const today = new Date();
     const minAge = 16;
@@ -410,12 +696,15 @@ if (document.body.classList.contains("register-page")) {
   }
 
   // Enable password visibility toggle for all eye icons
+  // Enable password visibility toggle for all eye icons
   toggleIcons.forEach((icon) => {
     icon.addEventListener("click", () => {
+      togglePassword(icon.dataset.target, icon);
       togglePassword(icon.dataset.target, icon);
     });
   });
 
+  // Initialize password validation logic
   // Initialize password validation logic
   if (password) setupPasswordValidation(password, confirmPassword);
 
@@ -548,19 +837,95 @@ if (document.body.classList.contains("register-page")) {
    - Manages login form submission,
      validation, and feedback alerts.
 ===================================== */
+/* ===================================
+   5. LOGIN PAGE SCRIPTS (login.html)
+   - Manages login form submission,
+     validation, and feedback alerts.
+===================================== */
 if (document.body.classList.contains("login-page")) {
   const loginForm = document.getElementById("loginForm");
   const toggleIcons = document.querySelectorAll(".toggle-password");
 
   // Enable password visibility toggle for all eye icons
+  // Enable password visibility toggle for all eye icons
   toggleIcons.forEach((icon) => {
     icon.addEventListener("click", () => {
+      togglePassword(icon.dataset.target, icon);
       togglePassword(icon.dataset.target, icon);
     });
   });
 
   // Handle login form submission with async request
+  // Handle login form submission with async request
   if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const emailInput = loginForm.querySelector('input[name="email"]');
+      const passwordInput = loginForm.querySelector('input[name="password"]');
+      const submitBtn = loginForm.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn.innerHTML;
+      const now = Date.now();
+
+      // Prevent rapid multiple submissions (3-second throttle)
+      if (
+        loginForm.dataset.lastSubmitTime &&
+        now - loginForm.dataset.lastSubmitTime < 3000
+      ) {
+        showAlert("⏳ Please wait a moment before submitting again.", "info");
+        return;
+      }
+
+      // Trim whitespace from inputs
+      const email = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+
+      // Basic field validation
+      if (!email || !password) {
+        showAlert("⚠️ Please enter both email and password.", "info");
+        return;
+      }
+
+      // Disable submit button + show spinner
+      submitBtn.disabled = true;
+      submitBtn.classList.add("btn-disabled");
+      submitBtn.innerHTML = `<span class="spinner"></span> Signing in...`;
+
+      // Prepare form data
+      const formData = new FormData(loginForm);
+      formData.set("email", email);
+      formData.set("password", password);
+
+      try {
+        const response = await fetch("login.php", {
+          method: "POST",
+          body: formData,
+        });
+        const result = await response.json();
+
+        if (result.success) {
+          const name = result.firstname ? result.firstname : "";
+          const message = name
+            ? `✅ Login successful! Welcome back, ${name}!`
+            : "✅ Login successful!";
+          showAlert(message, "success");
+
+          // Redirect to dashboard after short delay
+          setTimeout(() => {
+            window.location.href = "dashboard.php";
+          }, 1500);
+        } else {
+          showAlert(`❌ ${result.message}`, "error");
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        showAlert("❌ Network or server error. Please try again.", "error");
+      } finally {
+        // Restore button state
+        submitBtn.disabled = false;
+        submitBtn.classList.remove("btn-disabled");
+        submitBtn.innerHTML = originalBtnText;
+        loginForm.dataset.lastSubmitTime = now;
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -660,6 +1025,38 @@ if (document.body.classList.contains("login-page")) {
   })();
 }
 
+  // ====== LOGIN PAGE URL ALERTS =====
+  // Handles alerts triggered by URL query parameters
+  (function () {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const showUrlAlert = (param, message, type) => {
+      if (urlParams.get(param) === "1") {
+        showAlert(message, type);
+        const cleanUrl = window.location.href.split("?")[0];
+        window.history.replaceState({}, document.title, cleanUrl);
+      }
+    };
+
+    showUrlAlert("logout", "✅ Logged out.", "success");
+    showUrlAlert(
+      "registered",
+      "🎉 Registration successful! Please log in.",
+      "success"
+    );
+    showUrlAlert(
+      "sessionexpired",
+      "⚠️ Your session has expired. Please log in again.",
+      "info"
+    );
+  })();
+}
+
+/* ===========================================
+   6. DASHBOARD PAGE SCRIPTS (dashboard.html)
+   - Handles user greeting, sidebar toggle,
+     and dark/light theme management.
+============================================== */
 /* ===========================================
    6. DASHBOARD PAGE SCRIPTS (dashboard.html)
    - Handles user greeting, sidebar toggle,
@@ -668,12 +1065,15 @@ if (document.body.classList.contains("login-page")) {
 document.addEventListener("DOMContentLoaded", () => {
   // Example user greeting (replace with dynamic data in production)
   const userFirstName = "John";
+  // Example user greeting (replace with dynamic data in production)
+  const userFirstName = "John";
   const firstNameElem = document.getElementById("user-firstname");
   if (firstNameElem && userFirstName) {
     firstNameElem.textContent = userFirstName;
   }
 });
 
+// Toggle sidebar collapse/expand state
 // Toggle sidebar collapse/expand state
 function toggleSidebar() {
   const sidebar = document.querySelector(".sidebar");
@@ -691,6 +1091,7 @@ function toggleSidebar() {
 }
 
 // Theme switcher between light and dark mode
+// Theme switcher between light and dark mode
 const themeToggleBtn = document.querySelector(".toggle-theme");
 if (themeToggleBtn) {
   themeToggleBtn.addEventListener("click", () => {
@@ -699,8 +1100,13 @@ if (themeToggleBtn) {
       "theme",
       document.body.classList.contains("dark-theme") ? "dark" : "light"
     );
+    localStorage.setItem(
+      "theme",
+      document.body.classList.contains("dark-theme") ? "dark" : "light"
+    );
   });
 
+  // Apply saved theme preference on page load
   // Apply saved theme preference on page load
   window.addEventListener("DOMContentLoaded", () => {
     const storedTheme = localStorage.getItem("theme");
